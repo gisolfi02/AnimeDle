@@ -107,10 +107,26 @@
   function natureLabels(a) {
     return a && a.length ? a.map((n) => `<span class="nitem" title="${esc(n)}"><span class="nature-emoji">${symbols[n] || "✦"}</span>${esc(n)}</span>`).join("") : '<span class="tag">Nessuna</span>';
   }
+
   function arcTile(g, s) {
-    if (g.first_arc_order === s.first_arc_order) return tile(esc(g.first_arc), "correct");
-    return tile(esc(g.first_arc) + `<span class="arrow" title="${s.first_arc_order > g.first_arc_order ? "Soluzione in un arco successivo" : "Soluzione in un arco precedente"}">${s.first_arc_order > g.first_arc_order ? "↑" : "↓"}</span>`, "wrong");
+    if (g.first_arc_order === s.first_arc_order) {
+      return tile(esc(g.first_arc), "correct");
+    }
+
+    const up = s.first_arc_order > g.first_arc_order;
+    const direction = up ? "arc-up" : "arc-down";
+
+    const explanation = up ? "Soluzione in un arco successivo" : "Soluzione in un arco precedente";
+
+    return `
+        <div class="tile wrong arc-direction ${direction}"
+             title="${explanation}"
+             aria-label="${esc(g.first_arc)} — ${explanation}">
+            <span class="arc-label">${esc(g.first_arc)}</span>
+        </div>
+    `;
   }
+
   function renderGuess(c) {
     const hit = c.id === secret.id;
     let url = esc(safeImg(c.image_url));
