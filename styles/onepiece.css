@@ -832,6 +832,22 @@ input::placeholder {
 .table-scroll {
   width: 100%;
 }
+.table-scroll::-webkit-scrollbar,
+.suggestions::-webkit-scrollbar {
+  height: 9px;
+  width: 8px;
+}
+
+.table-scroll::-webkit-scrollbar-thumb,
+.suggestions::-webkit-scrollbar-thumb {
+  background: #ae7940;
+  border-radius: 99px;
+}
+
+.table-scroll::-webkit-scrollbar-track {
+  background: #ffda9b;
+  border-radius: 99px;
+}
 table {
   border-spacing: 5px 7px;
 }

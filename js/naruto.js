@@ -74,12 +74,7 @@
     if (!current.length) {
       list.innerHTML = '<div class="option">Nessun personaggio trovato</div>';
     } else {
-      list.innerHTML = current
-        .map(
-          (c, i) =>
-            `<button type="button" class="option ${i === 0 ? "active" : ""}" data-index="${i}" role="option" aria-selected="${i === 0}"><img class="mini" loading="lazy" referrerpolicy="no-referrer" src="${esc(safeImg(c.image_url))}" alt="" onerror="this.style.visibility='hidden'"><span><span class="opt-name">${esc(c.name)}</span><br><span class="opt-sub">${esc(c.affiliations.join(", ") || "Affiliazione non nota")}</span></span></button>`,
-        )
-        .join("");
+      list.innerHTML = current.map((c, i) => `<button type="button" class="option ${i === 0 ? "active" : ""}" data-index="${i}" role="option" aria-selected="${i === 0}"><img class="mini" loading="lazy" referrerpolicy="no-referrer" src="${esc(safeImg(c.image_url))}" alt="" onerror="this.style.visibility='hidden'"><span><span class="opt-name">${esc(c.name)}</span><br><span class="opt-sub">${esc(c.affiliations.join(", ") || "Affiliazione non nota")}</span></span></button>`).join("");
     }
     list.classList.add("open");
     input.setAttribute("aria-expanded", "true");
@@ -114,11 +109,7 @@
   }
   function arcTile(g, s) {
     if (g.first_arc_order === s.first_arc_order) return tile(esc(g.first_arc), "correct");
-    return tile(
-      esc(g.first_arc) +
-        `<span class="arrow" title="${s.first_arc_order > g.first_arc_order ? "Soluzione in un arco successivo" : "Soluzione in un arco precedente"}">${s.first_arc_order > g.first_arc_order ? "↑" : "↓"}</span>`,
-      "wrong",
-    );
+    return tile(esc(g.first_arc) + `<span class="arrow" title="${s.first_arc_order > g.first_arc_order ? "Soluzione in un arco successivo" : "Soluzione in un arco precedente"}">${s.first_arc_order > g.first_arc_order ? "↑" : "↓"}</span>`, "wrong");
   }
   function renderGuess(c) {
     const hit = c.id === secret.id;
@@ -145,7 +136,9 @@
       status("Hai già provato questo personaggio.");
       return;
     }
+    const first = guesses.size === 0;
     guesses.add(c.id);
+    if (first) rows.innerHTML = "";
     rows.insertAdjacentHTML("afterbegin", renderGuess(c));
     rows.firstElementChild.classList.add("riga-animata");
     input.value = "";
@@ -179,7 +172,7 @@
     secret = nextSecret();
     guesses = new Set();
     ended = false;
-    rows.innerHTML = "";
+    rows.innerHTML = '<tr><td colspan="8" class="empty"></td></tr>';
     input.value = "";
     input.disabled = false;
     byId("submitGuess").disabled = false;

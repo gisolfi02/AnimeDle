@@ -84,12 +84,7 @@
     if (!currentOptions.length) {
       suggestions.innerHTML = '<div class="empty">Nessun personaggio disponibile con questo nome.</div>';
     } else {
-      suggestions.innerHTML = currentOptions
-        .map(
-          (c, i) =>
-            `<button class="result ${i === activeIndex ? "active" : ""}" id="opt-${i}" data-index="${i}" role="option" aria-selected="${i === activeIndex}"><img class="small-avatar" src="${escapeHTML(c.image_url)}" alt="" loading="lazy" onerror="${imageError}"><span><span class="result-name">${escapeHTML(c.name)}</span><br><span class="result-meta">${escapeHTML(c.affiliation)}</span></span></button>`,
-        )
-        .join("");
+      suggestions.innerHTML = currentOptions.map((c, i) => `<button class="result ${i === activeIndex ? "active" : ""}" id="opt-${i}" data-index="${i}" role="option" aria-selected="${i === activeIndex}"><img class="small-avatar" src="${escapeHTML(c.image_url)}" alt="" loading="lazy" onerror="${imageError}"><span><span class="result-name">${escapeHTML(c.name)}</span><br><span class="result-meta">${escapeHTML(c.affiliation)}</span></span></button>`).join("");
     }
     suggestions.classList.add("show");
     input.setAttribute("aria-expanded", "true");
@@ -195,7 +190,9 @@
       setStatus("Hai già provato questo personaggio.");
       return;
     }
+    const first = guessed.size === 0;
     guessed.add(c.id);
+    if (first) rows.innerHTML = "";
     rows.insertAdjacentHTML("afterbegin", makeRow(c));
     rows.firstElementChild.classList.add("riga-animata");
     input.value = "";
@@ -218,9 +215,7 @@
     win.classList.toggle("lost", !success);
     win.classList.add("show");
     el("endTitle").textContent = success ? "🎉 Personaggio indovinato!" : "🏴‍☠️ Soluzione rivelata";
-    el("endText").textContent = success
-      ? `Hai trovato ${secret.name} in ${guessed.size} ${guessed.size === 1 ? "tentativo" : "tentativi"}!`
-      : `Il personaggio segreto era ${secret.name}. Puoi iniziare subito una nuova partita.`;
+    el("endText").textContent = success ? `Hai trovato ${secret.name} in ${guessed.size} ${guessed.size === 1 ? "tentativo" : "tentativi"}!` : `Il personaggio segreto era ${secret.name}. Puoi iniziare subito una nuova partita.`;
     setStatus("");
   }
   function begin() {
@@ -228,7 +223,7 @@
     guessed = new Set();
     won = false;
     finished = false;
-    rows.innerHTML = "";
+    rows.innerHTML = '<tr><td colspan="9" class="empty"></td></tr>';
     input.disabled = false;
     el("guessBtn").disabled = false;
     el("reveal").disabled = false;

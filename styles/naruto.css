@@ -424,6 +424,23 @@ h2::after {
 #guessInput::placeholder {
   color: #8f8875;
 }
+
+.table-scroll::-webkit-scrollbar,
+.dropdown::-webkit-scrollbar {
+  height: 9px;
+  width: 8px;
+}
+
+.table-scroll::-webkit-scrollbar-thumb,
+.dropdown::-webkit-scrollbar-thumb {
+  background: #a66b37;
+  border-radius: 99px;
+}
+
+.table-scroll::-webkit-scrollbar-track {
+  background: #ffda9b;
+  border-radius: 99px;
+}
 .dropdown {
   display: none;
   position: absolute;

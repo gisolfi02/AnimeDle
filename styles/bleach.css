@@ -568,7 +568,6 @@ input:focus-visible,
   overscroll-behavior-x: contain;
   -webkit-overflow-scrolling: touch;
   padding-bottom: 6px;
-  scrollbar-color: #aaa2a0 #e8e5df;
 }
 
 thead th {
@@ -785,6 +784,22 @@ thead th {
   color: #9f2435;
 }
 
+.table-scroll::-webkit-scrollbar,
+.dropdown::-webkit-scrollbar {
+  height: 9px;
+  width: 8px;
+}
+
+.table-scroll::-webkit-scrollbar-thumb,
+.dropdown::-webkit-scrollbar-thumb {
+  background: #bb2c3c;
+  border-radius: 99px;
+}
+
+.table-scroll::-webkit-scrollbar-track {
+  background: #e2919a;
+  border-radius: 99px;
+}
 .riga-animata > td {
   position: relative;
 }
