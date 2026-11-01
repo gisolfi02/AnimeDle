@@ -138,8 +138,7 @@ button {
   transform: translateY(-1px);
 }
 .btn:focus-visible,
-.result:focus-visible,
-input:focus-visible {
+.result:focus-visible {
   outline: 3px solid #5a9ccd;
   outline-offset: 2px;
 }
