@@ -78,11 +78,11 @@ Each game features its own visual identity, character roster, and set of clue ca
 
 | Indicator | Meaning |
 | :-------: | ------- |
-| 🟩 | **Correct** — the attribute matches the mystery character. |
-| 🟨 | **Partial match** — some information overlaps, where supported by the category. |
-| 🟥 | **Incorrect** — the attribute does not match. |
-| ⬜ | **Unknown / unavailable** — the available data does not allow a complete comparison, where applicable. |
-| ⬆️ / ⬇️ | **Higher / lower** — the target value is greater or smaller (for example, height, bounty, or debut order, depending on the game). |
+| 🟩 | **Correct** - the attribute matches the mystery character. |
+| 🟨 | **Partial match** - some information overlaps, where supported by the category. |
+| 🟥 | **Incorrect** - the attribute does not match. |
+| ⬜ | **Unknown / unavailable** - the available data does not allow a complete comparison, where applicable. |
+| ⬆️ / ⬇️ | **Higher / lower** - the target value is greater or smaller (for example, height, bounty, or debut order, depending on the game). |
 
 <details>
 <summary><strong>📋 Which attributes are compared?</strong></summary>
