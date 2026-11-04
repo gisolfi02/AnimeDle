@@ -1,17 +1,17 @@
 <div align="center">
 
-<img src="./images/logo.png" alt="Logo di Animedle" width="112" />
+<img src="./images/logo.png" alt="Animedle logo" width="112" />
 
 # ANIMEDLE
 
-### Quattro universi. Un personaggio segreto. Infinite sfide.
+### Four universes. One mystery character. Endless challenges.
 
-**Un gioco di deduzione dedicato agli anime, ispirato ai giochi in stile _Dle_.**  
-Scegli il tuo universo, indovina il personaggio misterioso e usa gli indizi per arrivare alla soluzione.
+**An anime-themed character deduction game inspired by _Dle-style guessing games.**  
+Choose your universe, guess the mystery character, and use the clues to uncover the answer.
 
 <p>
-  <a href="https://gisolfi02.github.io/Animedle/"><img alt="Gioca online" src="https://img.shields.io/badge/%E2%96%B6%20GIOCA%20ORA-Animedle-ef8f4f?style=for-the-badge&labelColor=172333" /></a>
-  <a href="https://github.com/gisolfi02/Animedle"><img alt="Repository GitHub" src="https://img.shields.io/badge/GitHub-Repository-2b3546?style=for-the-badge&logo=github" /></a>
+  <a href="https://gisolfi02.github.io/Animedle/"><img alt="Play online" src="https://img.shields.io/badge/%E2%96%B6%20PLAY%20NOW-Animedle-ef8f4f?style=for-the-badge&labelColor=172333" /></a>
+  <a href="https://github.com/gisolfi02/Animedle"><img alt="GitHub repository" src="https://img.shields.io/badge/GitHub-Repository-2b3546?style=for-the-badge&logo=github" /></a>
 </p>
 
 <p>
@@ -21,110 +21,110 @@ Scegli il tuo universo, indovina il personaggio misterioso e usa gli indizi per 
   <img alt="GitHub Pages" src="https://img.shields.io/badge/GitHub%20Pages-Deploy-222222?style=flat-square&logo=githubpages&logoColor=white" />
 </p>
 
-**[🌐 Apri Animedle](https://gisolfi02.github.io/Animedle/)**
+**[🌐 Open Animedle](https://gisolfi02.github.io/Animedle/)**
 
 </div>
 
 ---
 
-## 🌌 Esplora i quattro universi
+## 🌌 Explore the Four Universes
 
-Ogni gioco ha una propria identità grafica, un insieme di personaggi e categorie di indizi differenti.
+Each game features its own visual identity, character roster, and set of clue categories.
 
 <table>
   <tr>
     <td align="center" width="50%">
-      <a href="https://gisolfi02.github.io/Animedle/onepiece/"><img src="./images/onepiece.jpg" alt="Banner One Piece" width="100%" /></a><br />
+      <a href="https://gisolfi02.github.io/Animedle/onepiece/"><img src="./images/onepiece.jpg" alt="One Piece banner" width="100%" /></a><br />
       <strong>🏴‍☠️ OnePiecedle</strong><br />
-      <sub>Grand Line · Mappa del tesoro</sub><br /><br />
-      Ciurma, Frutti del Diavolo, Haki, taglie e molto altro.<br /><br />
-      <a href="https://gisolfi02.github.io/Animedle/onepiece/">Gioca a OnePiecedle</a>
+      <sub>Grand Line · Treasure Map</sub><br /><br />
+      Crews, Devil Fruits, Haki, bounties, and much more.<br /><br />
+      <a href="https://gisolfi02.github.io/Animedle/onepiece/">Play OnePiecedle</a>
     </td>
     <td align="center" width="50%">
-      <a href="https://gisolfi02.github.io/Animedle/naruto/"><img src="./images/naruto.jpg" alt="Banner Naruto" width="100%" /></a><br />
+      <a href="https://gisolfi02.github.io/Animedle/naruto/"><img src="./images/naruto.jpg" alt="Naruto banner" width="100%" /></a><br />
       <strong>🍃 Narutodle</strong><br />
-      <sub>Pergamena dello Shinobi</sub><br /><br />
-      Villaggi, tecniche ninja, Kekkei Genkai e nature del chakra.<br /><br />
-      <a href="https://gisolfi02.github.io/Animedle/naruto/">Gioca a Narutodle</a>
+      <sub>Shinobi Scroll</sub><br /><br />
+      Villages, ninja techniques, Kekkei Genkai, and chakra natures.<br /><br />
+      <a href="https://gisolfi02.github.io/Animedle/naruto/">Play Narutodle</a>
     </td>
   </tr>
   <tr>
     <td align="center" width="50%">
-      <a href="https://gisolfi02.github.io/Animedle/dragonball/"><img src="./images/dragonball.jpg" alt="Banner Dragon Ball" width="100%" /></a><br />
+      <a href="https://gisolfi02.github.io/Animedle/dragonball/"><img src="./images/dragonball.jpg" alt="Dragon Ball banner" width="100%" /></a><br />
       <strong>🐉 Dragonballdle</strong><br />
       <sub>Dragon Radar · Capsule Edition</sub><br /><br />
-      Capelli, razze, provenienze, saghe e serie.<br /><br />
-      <a href="https://gisolfi02.github.io/Animedle/dragonball/">Gioca a Dragonballdle</a>
+      Hair, races, origins, sagas, and series.<br /><br />
+      <a href="https://gisolfi02.github.io/Animedle/dragonball/">Play Dragonballdle</a>
     </td>
     <td align="center" width="50%">
-      <a href="https://gisolfi02.github.io/Animedle/bleach/"><img src="./images/bleach.jpg" alt="Banner Bleach" width="100%" /></a><br />
+      <a href="https://gisolfi02.github.io/Animedle/bleach/"><img src="./images/bleach.jpg" alt="Bleach banner" width="100%" /></a><br />
       <strong>⚔️ Bleachdle</strong><br />
       <sub>Bankai · Monochrome Edition</sub><br /><br />
-      Razze, professioni, affiliazioni e archi narrativi.<br /><br />
-      <a href="https://gisolfi02.github.io/Animedle/bleach/">Gioca a Bleachdle</a>
+      Races, occupations, affiliations, and story arcs.<br /><br />
+      <a href="https://gisolfi02.github.io/Animedle/bleach/">Play Bleachdle</a>
     </td>
   </tr>
 </table>
 
-## 🎮 Come si gioca
+## 🎮 How to Play
 
-1. **Scegli un anime** dalla schermata iniziale.
-2. **Cerca un personaggio** digitandone il nome nella barra di ricerca e selezionandolo dai suggerimenti.
-3. **Leggi gli indizi:** ogni tentativo aggiunge una riga con gli attributi del personaggio scelto, confrontati con quelli della risposta segreta.
-4. **Restringi le possibilità** usando colori, corrispondenze parziali e frecce direzionali.
-5. **Indovina il personaggio** oppure rivela la soluzione, poi avvia una nuova partita quando vuoi.
+1. **Choose an anime** from the home screen.
+2. **Search for a character** by typing their name and selecting them from the suggestions.
+3. **Read the clues:** each guess adds a row comparing the selected character's attributes with those of the mystery character.
+4. **Narrow down the possibilities** using colors, partial matches, and directional arrows.
+5. **Guess the mystery character** or reveal the answer, then start a new game whenever you like.
 
-### Come interpretare i colori
+### Understanding the Clues
 
-| Indicatore | Significato                                                                                                                              |
-| :--------: | ---------------------------------------------------------------------------------------------------------------------------------------- |
-|     🟩     | **Corretto** - l'attributo coincide con quello del personaggio segreto.                                                                  |
-|     🟨     | **Parziale** - esiste una corrispondenza parziale, nelle categorie che la prevedono.                                                     |
-|     🟥     | **Errato** - l'attributo non corrisponde.                                                                                                |
-|     ⬜     | **Sconosciuto / non disponibile** - il dato non permette un confronto completo, quando previsto.                                         |
-|  ⬆️ / ⬇️   | **Più alto / più basso** - il valore cercato è maggiore o minore (per esempio altezza, taglia o ordine di debutto, a seconda del gioco). |
+| Indicator | Meaning |
+| :-------: | ------- |
+| 🟩 | **Correct** — the attribute matches the mystery character. |
+| 🟨 | **Partial match** — some information overlaps, where supported by the category. |
+| 🟥 | **Incorrect** — the attribute does not match. |
+| ⬜ | **Unknown / unavailable** — the available data does not allow a complete comparison, where applicable. |
+| ⬆️ / ⬇️ | **Higher / lower** — the target value is greater or smaller (for example, height, bounty, or debut order, depending on the game). |
 
 <details>
-<summary><strong>📋 Quali attributi vengono confrontati?</strong></summary>
+<summary><strong>📋 Which attributes are compared?</strong></summary>
 
-| Gioco             | Attributi                                                                                                               |
-| ----------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| **OnePiecedle**   | Personaggio, genere, affiliazione, Frutto del Diavolo, Haki, ultima taglia, altezza, provenienza, primo arco narrativo. |
-| **Narutodle**     | Personaggio, genere, affiliazioni, tipi di jutsu, Kekkei Genkai, nature del chakra, attributi e arco di debutto.        |
-| **Dragonballdle** | Personaggio, genere, capelli, origine/universo, razza, saga e serie.                                                    |
-| **Bleachdle**     | Personaggio, genere, altezza, razza, professione, luogo, affiliazione e primo arco narrativo.                           |
+| Game | Attributes |
+| ---- | ---------- |
+| **OnePiecedle** | Character, gender, affiliation, Devil Fruit, Haki, latest bounty, height, origin, and first story arc. |
+| **Narutodle** | Character, gender, affiliations, jutsu types, Kekkei Genkai, chakra natures, attributes, and debut arc. |
+| **Dragonballdle** | Character, gender, hair, origin/universe, race, saga, and series. |
+| **Bleachdle** | Character, gender, height, race, occupation, location, affiliation, and first story arc. |
 
 </details>
 
-## ✨ Funzionalità
+## ✨ Features
 
-- 🎲 **Partite rigiocabili:** un nuovo personaggio segreto per ogni partita.
-- 🔎 **Ricerca con suggerimenti:** trova rapidamente i personaggi e selezionali dall'elenco.
-- 🧩 **Indizi visivi:** colori, confronti e frecce aiutano a dedurre la risposta.
-- 🎴 **Rivelazione progressiva:** gli indizi compaiono con un'animazione sequenziale.
-- 🎨 **Quattro temi grafici:** un'interfaccia personalizzata per ciascun anime.
-- 📱 **Layout responsive:** giocabile da desktop, tablet e smartphone; la tabella può scorrere orizzontalmente sugli schermi piccoli.
-- 🔊 **Atmosfera sonora opzionale:** dove configurata, puoi attivare o disattivare il sottofondo ambientale durante la partita.
-- ⚡ **Nessun backend richiesto:** il gioco funziona nel browser usando HTML, CSS, JavaScript e file JSON.
+- 🎲 **Replayable games:** discover a new mystery character every round.
+- 🔎 **Autocomplete search:** quickly find characters and select them from the suggestions.
+- 🧩 **Visual clues:** colors, comparisons, and arrows help you work out the answer.
+- 🎴 **Progressive reveal:** clues appear through a sequential animation.
+- 🎨 **Four unique themes:** a custom interface for each anime universe.
+- 📱 **Responsive design:** playable on desktop, tablet, and mobile; clue tables can scroll horizontally on smaller screens.
+- 🔊 **Optional ambient audio:** where configured, background ambience can be enabled or disabled during gameplay.
+- ⚡ **No backend required:** the games run directly in the browser using HTML, CSS, JavaScript, and JSON files.
 
-## 🛠️ Tecnologie
+## 🛠️ Tech Stack
 
-| Tecnologia               | Utilizzo                                                           |
-| ------------------------ | ------------------------------------------------------------------ |
-| **HTML5**                | Struttura delle pagine e interfaccia dei giochi.                   |
-| **CSS3**                 | Temi, responsive design e animazioni degli indizi.                 |
-| **JavaScript (Vanilla)** | Logica dei tentativi, ricerca, confronti e gestione delle partite. |
-| **JSON**                 | Dataset dei personaggi, mantenuti separati dalla logica di gioco.  |
-| **Font Awesome**         | Icone dei controlli e dell'interfaccia.                            |
-| **GitHub Pages**         | Pubblicazione del sito statico.                                    |
+| Technology | Purpose |
+| ---------- | ------- |
+| **HTML5** | Page structure and game interfaces. |
+| **CSS3** | Themes, responsive layouts, and clue animations. |
+| **Vanilla JavaScript** | Guess handling, search, comparisons, and game state. |
+| **JSON** | Character datasets kept separate from game logic. |
+| **Font Awesome** | Interface and control icons. |
+| **GitHub Pages** | Static website hosting. |
 
-## 📁 Organizzazione del progetto
+## 📁 Project Structure
 
-La struttura principale è organizzata per anime, separando l'interfaccia, la logica e i dati:
+The project is organized by anime, keeping the interface, logic, and data separate:
 
 ```text
 Animedle/
-├── index.html                 # Home / selezione dei giochi
+├── index.html                 # Home page / game selection
 ├── onepiece/
 │   ├── index.html
 │   └── characters.json
@@ -142,59 +142,59 @@ Animedle/
 │   ├── naruto.js
 │   ├── dragonball.js
 │   ├── bleach.js
-│   └── ambient.js           # Gestione audio condivisa, se abilitata
-├── styles/                      # Fogli di stile dei giochi
-├── images/                   # Banner e icone del sito
-└── audio/                    # Sottofondi ambientali, se presenti
+│   └── ambient.js             # Shared audio controls, if enabled
+├── styles/                   # Game stylesheets
+├── images/                   # Banners and site icons
+└── audio/                    # Ambient soundtracks, if present
 ```
 
-## 🚀 Avvio in locale
+## 🚀 Running Locally
 
-**1. Clona la repository:**
+**1. Clone the repository:**
 
 ```bash
 git clone https://github.com/gisolfi02/Animedle.git
 cd Animedle
 ```
 
-**2. Avvia un semplice server HTTP:**
+**2. Start a local HTTP server:**
 
 ```bash
 python -m http.server 8000
 ```
 
-**3. Apri il browser:**
+**3. Open the game in your browser:**
 
 ```text
 http://localhost:8000/
 ```
 
-> **Importante:** non aprire direttamente i file HTML con `file://`. I giochi caricano i personaggi tramite `fetch()` richiedono normalmente un server HTTP, anche in locale. In alternativa puoi usare **Live Server** su Visual Studio Code.
+> **Important:** avoid opening the HTML files directly with `file://`. The games load character data using `fetch()`, which generally requires an HTTP server even during local development. Alternatively, you can use the **Live Server** extension in Visual Studio Code.
 
-## 🧭 Personalizzazione
+## 🧭 Customization
 
-- **Personaggi:** modifica il file `characters.json` del gioco interessato, mantenendo i campi utilizzati dal relativo JavaScript.
-- **Aspetto:** modifica il CSS del gioco per personalizzarne colori, elementi e animazioni.
-- **Sottofondi:** inserisci audio con licenza idonea e collega la traccia nell'HTML corrispondente; la gestione del pulsante può essere condivisa tramite `js/ambient.js`.
+- **Characters:** edit the relevant game's `characters.json` file, keeping the fields expected by its JavaScript code.
+- **Appearance:** update the game's stylesheet to customize colors, components, and animations.
+- **Ambient audio:** add appropriately licensed audio files and reference them in the relevant HTML page; playback controls can be shared through `js/ambient.js`.
 
-Il progetto è pensato per essere aggiornato per singolo universo, senza dover modificare la logica degli altri giochi.
+Each anime universe can be updated independently without changing the logic of the other games.
 
-## 💬 Segnalazioni e suggerimenti
+## 💬 Bug Reports & Suggestions
 
-Hai notato un dato errato, un'immagine non disponibile o un problema nell'interfaccia? Puoi segnalarlo aprendo una **[GitHub Issue](https://github.com/gisolfi02/Animedle/issues)**, specificando il gioco, il personaggio e il comportamento osservato.
+Found incorrect character information, a missing image, or an interface issue? Please open a **[GitHub Issue](https://github.com/gisolfi02/Animedle/issues)** and include the game, character, and behavior you observed.
 
-## ⚖️ Disclaimer e diritti
+## ⚖️ Disclaimer & Copyright
 
-Animedle è un **progetto fan-made non ufficiale**, realizzato per passione e intrattenimento. Non è affiliato né approvato dai creatori, dagli editori o dagli altri titolari dei diritti delle opere rappresentate.
+Animedle is an **unofficial fan-made project** created for entertainment and out of a passion for anime. It is not affiliated with, endorsed by, or sponsored by the creators, publishers, or other rights holders of the featured works.
 
-_One Piece_, _Naruto_, _Dragon Ball_ e _Bleach_, con i rispettivi personaggi, nomi, immagini e altri elementi protetti, appartengono ai relativi aventi diritto. La presenza di materiali nel progetto non implica un'autorizzazione al loro riutilizzo.
+_One Piece_, _Naruto_, _Dragon Ball_, and _Bleach_, along with their respective characters, names, images, and other protected materials, belong to their respective rights holders. The presence of such materials in this project does not imply authorization for their reuse.
 
 ---
 
 <div align="center">
 
-**Fatto con passione per gli anime.** ❤️
+**Made with ❤️ for anime fans.**
 
-**[🎮 GIOCA AD ANIMEDLE](https://gisolfi02.github.io/Animedle/)**
+**[🎮 PLAY ANIMEDLE](https://gisolfi02.github.io/Animedle/)**
 
 </div>
