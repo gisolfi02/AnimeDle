@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
     <meta name="theme-color" content="#102554" />
     <script src="https://kit.fontawesome.com/7d86f6057b.js" crossorigin="anonymous"></script>
+    <script src="../js/i18n.js" defer></script>
     <script src="../js/dragonball.js" defer></script>
     <script src="../js/ambient.js" defer></script>
     <link rel="stylesheet" href="../styles/dragonball.css" />
@@ -22,26 +23,41 @@
           </div>
         </div>
         <div class="actions">
-          <a href="../index.html" class="btn"><i class="fas fa-arrow-left"></i> Tutti i giochi</a>
-          <button type="button" class="btn" id="showAnswer"><i class="fas fa-lightbulb"></i> Mostra soluzione</button>
-          <button type="button" class="btn primary" id="restart"><i class="fas fa-rotate-right"></i> Nuova partita</button>
-          <button class="btn" id="ambientToggle" type="button" aria-pressed="false">
+          <a href="../index.html" class="btn"><i class="fas fa-arrow-left"></i> <span data-i18n="dragonball.page.allGames">Tutti i giochi</span></a>
+          <button type="button" class="btn" id="showAnswer"><i class="fas fa-lightbulb"></i> <span data-i18n="dragonball.page.reveal">Mostra soluzione</span></button>
+          <button type="button" class="btn primary" id="restart"><i class="fas fa-rotate-right"></i> <span data-i18n="dragonball.page.newGame">Nuova partita</span></button>
+          <button class="btn" id="ambientToggle" type="button" aria-pressed="false" aria-label="Attiva atmosfera">
             <span id="ambientIcon">
               <i class="fa-solid fa-volume-xmark"></i>
             </span>
           </button>
+          <div class="language-picker" id="languagePicker">
+            <button class="language-trigger" id="languageTrigger" type="button" aria-label="Seleziona la lingua" aria-haspopup="true" aria-expanded="false" aria-controls="languageMenu">
+              <img class="language-flag" id="currentLanguageFlag" src="../images/flags/it.svg" alt="" />
+            </button>
+            <div class="language-menu" id="languageMenu" aria-label="Seleziona la lingua" data-i18n-aria-label="shared.language.label" hidden>
+              <button class="language-option" type="button" data-language="it" data-flag-src="../images/flags/it.svg" lang="it" aria-pressed="true">
+                <img class="language-flag" src="../images/flags/it.svg" alt="" />
+                <span data-i18n="shared.language.italian">Italiano</span>
+              </button>
+              <button class="language-option" type="button" data-language="en" data-flag-src="../images/flags/en.svg" lang="en" aria-pressed="false">
+                <img class="language-flag" src="../images/flags/en.svg" alt="" />
+                <span data-i18n="shared.language.english">Inglese</span>
+              </button>
+            </div>
+          </div>
         </div>
       </header>
       <main>
-        <h2>Indovina il personaggio di Dragon Ball!</h2>
+        <h2 data-i18n="dragonball.page.heading">Indovina il personaggio di Dragon Ball!</h2>
 
         <div class="search">
           <div class="input-line">
             <span class="input-icon" aria-hidden="true"><i class="fas fa-magnifying-glass"></i></span>
-            <input id="guessInput" type="text" placeholder="Nome del personaggio..." autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Nome del personaggio" aria-expanded="false" aria-controls="matches" />
-            <button class="btn primary" type="button" id="submitGuess">Prova <i class="fas fa-paper-plane"></i></button>
+            <input id="guessInput" type="text" placeholder="Nome del personaggio..." data-i18n-placeholder="dragonball.page.searchPlaceholder" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Nome del personaggio" data-i18n-aria-label="dragonball.page.searchAria" aria-expanded="false" aria-controls="matches" />
+            <button class="btn primary" type="button" id="submitGuess"><span data-i18n="dragonball.page.guess">Prova</span> <i class="fas fa-paper-plane"></i></button>
           </div>
-          <div id="matches" class="dropdown" role="listbox"></div>
+          <div id="matches" class="dropdown" role="listbox" aria-label="Personaggi suggeriti" data-i18n-aria-label="dragonball.page.suggestionsAria"></div>
         </div>
 
         <div id="message" class="message" role="status" aria-live="polite" style="display: none"></div>
@@ -49,31 +65,31 @@
         <div id="result" class="result">
           <strong id="resultTitle"></strong>
           <p id="resultText"></p>
-          <button class="btn primary" id="again" type="button"><i class="fas fa-rotate-right"></i> Gioca ancora</button>
+          <button class="btn primary" id="again" type="button"><i class="fas fa-rotate-right"></i> <span data-i18n="dragonball.page.playAgain">Gioca ancora</span></button>
         </div>
 
         <div class="table-outer">
-          <table>
+          <table aria-label="Tentativi e indizi" data-i18n-aria-label="dragonball.page.tableAria">
             <thead>
               <tr>
-                <th>Personaggio</th>
-                <th>Sesso</th>
-                <th>Capelli</th>
-                <th>Origine</th>
-                <th>Razza</th>
-                <th>Saga</th>
-                <th>Serie</th>
+                <th data-i18n="dragonball.columns.character">Personaggio</th>
+                <th data-i18n="dragonball.columns.gender">Sesso</th>
+                <th data-i18n="dragonball.columns.hair">Capelli</th>
+                <th data-i18n="dragonball.columns.origin">Origine</th>
+                <th data-i18n="dragonball.columns.race">Razza</th>
+                <th data-i18n="dragonball.columns.saga">Saga</th>
+                <th data-i18n="dragonball.columns.series">Serie</th>
               </tr>
             </thead>
             <tbody id="guessRows"></tbody>
           </table>
         </div>
         <div class="legend">
-          <h3>Legenda degli indizi</h3>
+          <h3 data-i18n="dragonball.page.legend">Legenda degli indizi</h3>
           <div class="legend-grid">
-            <div class="legend-item"><span class="swatch green"></span>Corretto</div>
-            <div class="legend-item"><span class="swatch yellow"></span>Parziale</div>
-            <div class="legend-item"><span class="swatch red"></span>Non corretto</div>
+            <div class="legend-item"><span class="swatch green"></span><span data-i18n="dragonball.page.correct">Corretto</span></div>
+            <div class="legend-item"><span class="swatch yellow"></span><span data-i18n="dragonball.page.partial">Parziale</span></div>
+            <div class="legend-item"><span class="swatch red"></span><span data-i18n="dragonball.page.wrong">Non corretto</span></div>
           </div>
         </div>
       </main>

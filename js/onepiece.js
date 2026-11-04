@@ -24,7 +24,50 @@
           "'": "&#39;",
         })[c],
     );
+  // Non modifichiamo mai i valori nel JSON: traduciamo solo quanto si vede.
+  const translate = (key, fallback = key) => {
+    const value = window.AnimedleI18n?.t(key);
+    return typeof value === "string" && value !== key ? value : fallback;
+  };
+  const fill = (template, data = {}) => template.replace(/\{(\w+)\}/g, (_, key) => String(data[key] ?? ""));
+  const translatedValue = (group, original) => {
+    const key = String(original ?? "").replace(/[^a-zA-Z0-9_]/g, "_");
+    return translate(`onepiece.values.${group}.${key}`, String(original ?? ""));
+  };
+  const gm = (key, fallback, data) => fill(translate(`onepiece.game.${key}`, fallback), data);
+
   const pool = [];
+  let currentStatus = null;
+  function showStatus(key, fallback, data = {}) {
+    currentStatus = { key, fallback, data };
+    setStatus(gm(key, fallback, data));
+  }
+  function translateExistingGame() {
+    // Cambio lingua a partita in corso: nessun reset e nessun nuovo tentativo.
+    if (guessed.size) {
+      const byId = new Map(pool.map((character) => [character.id, character]));
+      rows.innerHTML = Array.from(guessed)
+        .reverse()
+        .map((id) => (byId.has(id) ? makeRow(byId.get(id)) : ""))
+        .join("");
+    }
+    if (finished) updateEndPanel();
+    else if (currentStatus) {
+      const { key, fallback, data } = currentStatus;
+      setStatus(gm(key, fallback, data));
+    }
+    if (suggestions.classList.contains("show")) renderSuggestions();
+    updateAmbientAccessibility();
+  }
+  function updateAmbientAccessibility() {
+    const button = el("ambientToggle");
+    const audio = el("ambientAudio");
+    if (!button || !audio) return;
+    button.setAttribute("aria-label", translate(audio.paused ? "onepiece.page.audioOff" : "onepiece.page.audioOn", audio.paused ? "Attiva atmosfera" : "Disattiva atmosfera"));
+  }
+  document.addEventListener("animedle:languagechange", translateExistingGame);
+  el("ambientAudio")?.addEventListener("play", updateAmbientAccessibility);
+  el("ambientAudio")?.addEventListener("pause", updateAmbientAccessibility);
   let deck = [],
     secret = null,
     guessed = new Set(),
@@ -82,9 +125,9 @@
       .slice(0, 9);
     activeIndex = 0;
     if (!currentOptions.length) {
-      suggestions.innerHTML = '<div class="empty">Nessun personaggio disponibile con questo nome.</div>';
+      suggestions.innerHTML = `<div class="empty">${escapeHTML(gm("noResults", "Nessun personaggio disponibile con questo nome."))}</div>`;
     } else {
-      suggestions.innerHTML = currentOptions.map((c, i) => `<button class="result ${i === activeIndex ? "active" : ""}" id="opt-${i}" data-index="${i}" role="option" aria-selected="${i === activeIndex}"><img class="small-avatar" src="${escapeHTML(c.image_url)}" alt="" loading="lazy" onerror="${imageError}"><span><span class="result-name">${escapeHTML(c.name)}</span><br><span class="result-meta">${escapeHTML(c.affiliation)}</span></span></button>`).join("");
+      suggestions.innerHTML = currentOptions.map((c, i) => `<button class="result ${i === activeIndex ? "active" : ""}" id="opt-${i}" data-index="${i}" role="option" aria-selected="${i === activeIndex}"><img class="small-avatar" src="${escapeHTML(c.image_url)}" alt="" loading="lazy" onerror="${imageError}"><span><span class="result-name">${escapeHTML(c.name)}</span><br><span class="result-meta">${escapeHTML(translatedValue("affiliation", c.affiliation))}</span></span></button>`).join("");
     }
     suggestions.classList.add("show");
     input.setAttribute("aria-expanded", "true");
@@ -121,10 +164,10 @@
   function hakiLabel(c) {
     const dict = { observation: "👁️", armament: "✊", conqueror: "👑" };
     const types = hakiTypes(c);
-    return types.length ? types.map((x) => dict[x]).join(" ") : "Nessuno";
+    return types.length ? types.map((x) => dict[x]).join(" ") : gm("none", "Nessuno");
   }
   function statusAttr(x) {
-    return x === "correct" ? "Corretto" : x === "partial" ? "Parziale" : x === "unknown" ? "Sconosciuto" : "Non corretto";
+    return x === "correct" ? gm("statusCorrect", "Corretto") : x === "partial" ? gm("statusPartial", "Parziale") : x === "unknown" ? gm("statusUnknown", "Sconosciuto") : gm("statusWrong", "Non corretto");
   }
   function tile(value, st, extra = "") {
     return `<div class="tile ${st}" title="${statusAttr(st)}">${value}${extra}</div>`;
@@ -134,7 +177,7 @@
     const good = Math.abs(g - s) < 0.0001;
     const arrow = good
       ? ""
-      : `<span class="arrow" aria-label="${s > g ? "La risposta è più alta" : "La risposta è più bassa"}">${
+      : `<span class="arrow" aria-label="${s > g ? gm("directionHigher", "La risposta è più alta") : gm("directionLower", "La risposta è più bassa")}">${
           s > g
             ? `<i
               class="fa-solid fa-arrow-up"
@@ -149,12 +192,12 @@
   }
   function compactBounty(x) {
     if (x === 0) return "0 ฿";
-    if (x >= 1e9) return `${numFmt(x / 1e9)} Mld`;
-    if (x >= 1e6) return `${numFmt(x / 1e6)} Mln`;
-    return x.toLocaleString("it-IT") + " ฿";
+    if (x >= 1e9) return `${numFmt(x / 1e9)} ${gm("billions", "Mld")}`;
+    if (x >= 1e6) return `${numFmt(x / 1e6)} ${gm("millions", "Mln")}`;
+    return x.toLocaleString(window.AnimedleI18n?.getLanguage() === "en" ? "en-GB" : "it-IT") + " ฿";
   }
   function numFmt(n) {
-    return Number(n.toFixed(3)).toLocaleString("it-IT", {
+    return Number(n.toFixed(3)).toLocaleString(window.AnimedleI18n?.getLanguage() === "en" ? "en-GB" : "it-IT", {
       maximumFractionDigits: 3,
     });
   }
@@ -162,7 +205,7 @@
     return compareNumber(g, s, label);
   }
   function arcTile(g, s) {
-    if (g.first_arc_order === s.first_arc_order) return tile(escapeHTML(g.first_arc), "correct");
+    if (g.first_arc_order === s.first_arc_order) return tile(escapeHTML(translatedValue("arc", g.first_arc)), "correct");
     const arrow =
       s.first_arc_order > g.first_arc_order
         ? `<i
@@ -173,21 +216,22 @@
               class="fa-solid fa-arrow-down"
               style="color: rgb(255, 255, 255)"
             ></i>`;
-    return tile(escapeHTML(g.first_arc), "wrong", `<span class="arrow">${arrow}</span>`);
+    return tile(escapeHTML(translatedValue("arc", g.first_arc)), "wrong", `<span class="arrow">${arrow}</span>`);
   }
   function makeRow(c) {
     const g = c,
       s = secret,
       truth = g.id === s.id;
     const photo = `<div class="tile character-tile ${truth ? "hit" : ""}" title="${escapeHTML(g.name)}"><img src="${escapeHTML(g.image_url)}" alt="" loading="lazy" onerror="${imageError}"><span class="character-name">${escapeHTML(g.name)}</span></div>`;
-    const dev = String(g.devil_fruit_type) === "None" ? "Nessuno" : g.devil_fruit_type;
-    const height = g.height_cm ? `${numFmt(g.height_cm / 100)} m` : "Sconosciuta";
-    return `<tr><td>${photo}</td><td>${tile(g.gender === "Male" ? "Maschio" : g.gender === "Female" ? "Femmina" : escapeHTML(g.gender), compareScalar(g.gender, s.gender))}</td><td>${tile(escapeHTML(g.affiliation), compareScalar(g.affiliation, s.affiliation))}</td><td>${tile(escapeHTML(dev), compareScalar(g.devil_fruit_type, s.devil_fruit_type))}</td><td>${tile(hakiLabel(g), hakiStatus(g, s))}</td><td>${numericTile(g.bounty_beli, s.bounty_beli, compactBounty(g.bounty_beli))}</td><td>${compareNumber(g.height_cm || NaN, s.height_cm || NaN, height)}</td><td>${tile(escapeHTML(g.origin), compareScalar(g.origin, s.origin))}</td><td>${arcTile(g, s)}</td></tr>`;
+    const dev = translatedValue("fruit", g.devil_fruit_type);
+    const height = g.height_cm ? `${numFmt(g.height_cm / 100)} m` : gm("unknown", "Sconosciuta");
+    const gender = g.gender === "Male" ? gm("male", "Maschio") : g.gender === "Female" ? gm("female", "Femmina") : g.gender;
+    return `<tr><td>${photo}</td><td>${tile(escapeHTML(gender), compareScalar(g.gender, s.gender))}</td><td>${tile(escapeHTML(translatedValue("affiliation", g.affiliation)), compareScalar(g.affiliation, s.affiliation))}</td><td>${tile(escapeHTML(dev), compareScalar(g.devil_fruit_type, s.devil_fruit_type))}</td><td>${tile(hakiLabel(g), hakiStatus(g, s))}</td><td>${numericTile(g.bounty_beli, s.bounty_beli, compactBounty(g.bounty_beli))}</td><td>${compareNumber(g.height_cm || NaN, s.height_cm || NaN, height)}</td><td>${tile(escapeHTML(translatedValue("origin", g.origin)), compareScalar(g.origin, s.origin))}</td><td>${arcTile(g, s)}</td></tr>`;
   }
   function makeGuess(c) {
     if (finished) return;
     if (guessed.has(c.id)) {
-      setStatus("Hai già provato questo personaggio.");
+      showStatus("alreadyGuessed", "Hai già provato questo personaggio.");
       return;
     }
     const first = guessed.size === 0;
@@ -201,12 +245,26 @@
       won = true;
       endGame(true);
     } else {
-      setStatus(`Tentativi effettuati: ${guessed.size} · Personaggi disponibili: ${pool.length - guessed.size}`);
+      showStatus("attemptCount", "Tentativi effettuati: {count} · Personaggi disponibili: {remaining}", { count: guessed.size, remaining: pool.length - guessed.size });
       input.focus();
     }
   }
+  function updateEndPanel() {
+    const title = el("endTitle"),
+      description = el("endText");
+    if (!secret) return;
+    title.textContent = won ? gm("winTitle", "🎉 Personaggio indovinato!") : gm("revealTitle", "Soluzione rivelata");
+    description.textContent = won
+      ? gm("winText", "Hai trovato {name} in {count} {attemptWord}!", {
+          name: secret.name,
+          count: guessed.size,
+          attemptWord: guessed.size === 1 ? gm("attemptOne", "tentativo") : gm("attemptMany", "tentativi"),
+        })
+      : gm("revealText", "Il personaggio segreto era {name}. Puoi ricominciare subito.", { name: secret.name });
+  }
   function endGame(success) {
     finished = true;
+    won = success;
     input.disabled = true;
     el("guessBtn").disabled = true;
     el("reveal").disabled = true;
@@ -214,8 +272,8 @@
     const win = el("endPanel");
     win.classList.toggle("lost", !success);
     win.classList.add("show");
-    el("endTitle").textContent = success ? "🎉 Personaggio indovinato!" : "🏴‍☠️ Soluzione rivelata";
-    el("endText").textContent = success ? `Hai trovato ${secret.name} in ${guessed.size} ${guessed.size === 1 ? "tentativo" : "tentativi"}!` : `Il personaggio segreto era ${secret.name}. Puoi iniziare subito una nuova partita.`;
+    updateEndPanel();
+    currentStatus = null;
     setStatus("");
   }
   function begin() {
@@ -230,7 +288,7 @@
     el("endPanel").classList.remove("show", "lost");
     input.value = "";
     closeSuggestions();
-    setStatus(`${pool.length} personaggi da indovinare · Nessun limite di tentativi`);
+    showStatus("intro", "{total} personaggi da indovinare · Nessun limite di tentativi", { total: pool.length });
     input.focus();
   }
   input.addEventListener("input", renderSuggestions);
@@ -260,18 +318,27 @@
   function submitGuess() {
     if (finished) return;
     const q = norm(input.value);
-    if (!q) return setStatus("Scrivi il nome di un personaggio.");
+    if (!q) return showStatus("searchEmpty", "Scrivi il nome di un personaggio.");
     const exact = pool.find((c) => !guessed.has(c.id) && [c.name, ...(c.aliases || [])].some((n) => norm(n) === q));
     if (exact) return pickCharacter(exact);
     if (currentOptions.length && suggestions.classList.contains("show")) return pickCharacter(currentOptions[activeIndex]);
-    setStatus("Seleziona un personaggio dall’elenco.");
+    showStatus("searchSelect", "Seleziona un personaggio dall’elenco.");
     renderSuggestions();
   }
   el("guessBtn").addEventListener("click", submitGuess);
   el("newGame").addEventListener("click", begin);
   el("playAgain").addEventListener("click", begin);
   el("reveal").addEventListener("click", () => {
-    if (!finished) endGame(false);
+    if (!finished && secret) {
+      if (!guessed.has(secret.id)) {
+        guessed.add(secret.id);
+
+        rows.insertAdjacentHTML("afterbegin", makeRow(secret));
+        rows.firstElementChild.classList.add("riga-animata");
+      }
+
+      endGame(false);
+    }
   });
   document.addEventListener("click", (e) => {
     if (!e.target.closest(".search-area")) closeSuggestions();
@@ -281,7 +348,7 @@
   input.disabled = true;
   el("guessBtn").disabled = true;
   el("reveal").disabled = true;
-  setStatus("Caricamento dei personaggi...");
+  showStatus("loading", "Caricamento dei personaggi...");
 
   fetch("./characters.json", { cache: "no-store" })
     .then((response) => {
@@ -303,6 +370,6 @@
       input.disabled = true;
       el("guessBtn").disabled = true;
       el("reveal").disabled = true;
-      setStatus("Impossibile caricare characters.json. Verifica il percorso e apri il gioco tramite GitHub Pages o un server locale.");
+      showStatus("loadError", "Impossibile caricare characters.json. Verifica il percorso e apri il gioco tramite GitHub Pages o un server locale.");
     });
 })();

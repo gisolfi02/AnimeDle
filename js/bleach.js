@@ -18,6 +18,91 @@
     shown = [],
     selected = null,
     choice = -1;
+
+  // Multilingual presentation. All comparisons use the ORIGINAL characters.json.
+  let messageState = null;
+  let endingState = null;
+  const fields = Object.keys(labels);
+
+  function t(key, fallback = key) {
+    const fullKey = `bleach.${key}`;
+    const text = window.AnimedleI18n?.t(fullKey);
+    return typeof text === "string" && text !== fullKey ? text : fallback;
+  }
+  function interpolate(template, values = {}) {
+    return String(template).replace(/\{(\w+)\}/g, (_, key) => String(values[key] ?? ""));
+  }
+  function valueKey(value) {
+    return (
+      String(value)
+        .normalize("NFKD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^A-Za-z0-9]+/g, "_")
+        .replace(/^_+|_+$/g, "") || "empty"
+    );
+  }
+  function translatedValue(key, raw) {
+    if (raw === null || raw === undefined || raw === "" || raw === "N/D") {
+      return t("game.noData", "N/D");
+    }
+    if (Array.isArray(raw)) {
+      return raw.length ? raw.map((v) => translatedValue(key, v)).join(", ") : t("game.noData", "N/D");
+    }
+    if (key === "height_cm") return `${raw} cm`;
+    return t(`values.${key}.${valueKey(raw)}`, String(raw));
+  }
+  function attemptWord(count) {
+    return t(count === 1 ? "game.attemptSingular" : "game.attemptPlural", count === 1 ? "tentativo" : "tentativi");
+  }
+  function refreshCount() {
+    const count = tried.size;
+    $("count").textContent = interpolate(t("game.attempts", "{count} {attemptWord}"), {
+      count,
+      attemptWord: attemptWord(count),
+    });
+  }
+
+  function refreshEnding() {
+    if (!endingState || !secret) return;
+    const { revealed } = endingState;
+    const title = revealed ? t("game.revealTitle", "Soluzione rivelata") : t("game.winTitle", "Hai indovinato!");
+    const text = revealed ? t("game.revealText", "Il personaggio segreto era {name}. Puoi ricominciare subito.") : t("game.winText", "Il personaggio era {name}. Tentativi: {count}.");
+    showResult(title, interpolate(text, { name: secret.name, count: tried.size }), revealed);
+  }
+  function setEnding(revealed = false) {
+    endingState = { revealed };
+    refreshEnding();
+  }
+  function updateAudioLabel() {
+    const audio = $("ambientAudio"),
+      button = $("ambientToggle");
+    if (!audio || !button) return;
+    const label = audio.paused ? t("page.audioOff", "Attiva atmosfera") : t("page.audioOn", "Disattiva atmosfera");
+    button.setAttribute("aria-label", label);
+    button.setAttribute("title", label);
+  }
+  function onLanguageChange() {
+    // Update only the displayed clues, NOT the secret, attempted ids or scoring.
+    const columns = fields;
+    $("attempts")
+      .querySelectorAll("tr[data-character-id]")
+      .forEach((row) => {
+        const character = pool.find((c) => String(c.id) === row.dataset.characterId);
+        if (!character) return;
+        columns.forEach((key, index) => {
+          const copy = row.cells[index + 1]?.querySelector(".copy");
+          if (copy) copy.textContent = translatedValue(key, character[key]);
+        });
+      });
+    refreshCount();
+    refreshEnding();
+    if (!$("dropdown").hidden && $("search").value.trim()) showMatches();
+    updateAudioLabel();
+  }
+  document.addEventListener("animedle:languagechange", onLanguageChange);
+  ["play", "pause"].forEach((event) => $("ambientAudio")?.addEventListener(event, updateAudioLabel));
+  updateAudioLabel();
+
   const norm = (s) =>
     (s || "")
       .toString()
@@ -31,7 +116,6 @@
     if (text !== undefined) e.textContent = text;
     return e;
   };
-  const fmt = (v) => (Array.isArray(v) ? (v.length ? v.join(", ") : "N/D") : v === null || v === undefined || v === "" ? "N/D" : String(v));
   const arr = (v) => (Array.isArray(v) ? v.filter(Boolean) : v === null || v === undefined || v === " " ? [] : [String(v)]);
   const known = (v) => v !== null && v !== undefined && (Array.isArray(v) ? v.length > 0 : String(v).trim() !== "" && v !== "N/D");
   const showResult = (title, text, revealed = false) => {
@@ -44,6 +128,7 @@
     const e = $("message");
     e.textContent = text;
     e.className = "message" + (cls ? " " + cls : "");
+    e.style.display = text ? "" : "none";
   };
   const img = (url, alt) => {
     const e = el("img");
@@ -84,7 +169,7 @@
       return;
     }
     if (!shown.length) {
-      box.append(el("div", "no-results", "Nessun personaggio trovato"));
+      box.append(el("div", "no-results", t("game.noResults", "Nessun personaggio trovato")));
       toggleDropdown(true);
       return;
     }
@@ -99,7 +184,7 @@
       b.append(pic);
       const words = el("span", "option-txt");
       words.append(el("span", "option-name", c.name));
-      words.append(el("div", "option-extra", c.source_category || "Bleach"));
+      words.append(el("div", "option-extra", c.source_category ? translatedValue("source_category", c.source_category) : "Bleach"));
       b.append(words);
       b.addEventListener("click", () => choose(c));
       box.append(b);
@@ -136,8 +221,7 @@
     const v = c[key],
       s = compare(c, key),
       tile = el("div", "tile " + s.status + (s.direction ? " arrow-" + s.direction : ""));
-    let value = fmt(v);
-    if (key === "height_cm" && v !== null) value = v + " cm";
+    let value = translatedValue(key, v);
     const t = el("span", "copy", value);
     tile.append(t);
     const td = el("td");
@@ -158,6 +242,7 @@
     const tbody = $("attempts");
     if (tbody.querySelector(".empty")) tbody.replaceChildren();
     const tr = el("tr");
+    tr.dataset.characterId = String(c.id);
     tr.classList.add("riga-animata");
     tr.append(portrait(c));
     for (const key of Object.keys(labels)) tr.append(cell(c, key));
@@ -165,11 +250,9 @@
   }
   function tryGuess() {
     if (!secret) {
-      safeMessage("Il dataset non è ancora disponibile.", "error");
       return;
     }
     if (win) {
-      safeMessage("Partita conclusa: premi Nuova partita.");
       return;
     }
     let q = $("search").value.trim();
@@ -179,32 +262,28 @@
       if (m.length === 1) c = m[0];
     }
     if (!c) {
-      safeMessage("Seleziona un personaggio dai suggerimenti.", "error");
       showMatches();
       return;
     }
     if (tried.has(c.id)) {
-      safeMessage("Hai già provato questo personaggio.", "error");
       return;
     }
     tried.add(c.id);
     render(c);
-    $("count").textContent = tried.size + " tentativ" + (tried.size === 1 ? "o" : "i");
+    refreshCount();
     $("search").value = "";
     selected = null;
     toggleDropdown(false);
     if (c.id === secret.id) {
       win = true;
-      safeMessage("Complimenti! Hai indovinato " + secret.name + " in " + tried.size + " tentativ" + (tried.size === 1 ? "o!" : "i!"), "success");
       $("try").disabled = true;
-      showResult("Hai indovinato!", "Il personaggio era " + secret.name + ". Tentativi: " + tried.size + ".");
-    } else safeMessage("Continua a cercare! Ogni riquadro è un indizio.");
+      setEnding(false);
+    }
   }
   function begin() {
     if (!pool.length) return;
     const available = pool.filter((c) => c.eligible_target);
     if (!available.length) {
-      safeMessage("Nessun personaggio selezionabile nel dataset.", "error");
       return;
     }
     if (used.size >= available.length) used.clear();
@@ -221,13 +300,13 @@
     tr.append(empty);
     $("attempts").append(tr);
     $("result").className = "result";
+    endingState = null;
     $("search").value = "";
     $("search").disabled = false;
     $("try").disabled = false;
     $("reveal").disabled = false;
-    $("count").textContent = "0 tentativi";
+    refreshCount();
     toggleDropdown(false);
-    safeMessage("Personaggio segreto estratto. Buona fortuna!");
   }
   $("guess-form").addEventListener("submit", (e) => {
     e.preventDefault();
@@ -269,8 +348,7 @@
     }
     win = true;
     $("try").disabled = true;
-    safeMessage("La soluzione era " + secret.name + ". Premi Nuova partita per ricominciare.");
-    showResult("Soluzione: " + secret.name, "Puoi iniziare immediatamente una nuova partita.", true);
+    setEnding(true);
   });
   fetch("./characters.json", { cache: "no-store" })
     .then((r) => {
@@ -290,7 +368,6 @@
       $("try").disabled = true;
       $("new").disabled = true;
       $("reveal").disabled = true;
-      safeMessage("Impossibile leggere characters.json. Apri il gioco su GitHub Pages o con un server locale. (" + e.message + ")", "error");
-      $("count").textContent = "Errore dataset";
+      $("count").textContent = t("game.datasetError", "Errore dataset");
     });
 })();

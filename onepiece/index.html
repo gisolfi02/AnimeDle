@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="color-scheme" content="light" />
     <script src="https://kit.fontawesome.com/7d86f6057b.js" crossorigin="anonymous"></script>
+    <script src="../js/i18n.js" defer></script>
     <script src="../js/onepiece.js" defer></script>
     <script src="../js/ambient.js" defer></script>
     <link rel="stylesheet" href="../styles/onepiece.css" />
@@ -23,84 +24,99 @@
           </div>
         </div>
         <div class="actions">
-          <a class="btn" href="../index.html" style="text-decoration: none"><i class="fa-solid fa-arrow-left"></i> Tutti i giochi</a>
-          <button class="btn" id="reveal" type="button"><i class="fas fa-lightbulb"></i> Mostra soluzione</button>
+          <a class="btn" href="../index.html" style="text-decoration: none"><i class="fa-solid fa-arrow-left"></i> <span data-i18n="onepiece.page.allGames">Tutti i giochi</span></a>
+          <button class="btn" id="reveal" type="button"><i class="fas fa-lightbulb"></i> <span data-i18n="onepiece.page.reveal">Mostra soluzione</span></button>
           <button class="btn primary" id="newGame" type="button">
             <i class="fa-solid fa-rotate-right" style="color: rgb(255, 255, 255)"></i>
-            Nuova partita
+            <span data-i18n="onepiece.page.newGame">Nuova partita</span>
           </button>
-          <button class="btn" id="ambientToggle" type="button" aria-pressed="false">
+          <button class="btn" id="ambientToggle" type="button" aria-pressed="false" aria-label="Attiva atmosfera">
             <span id="ambientIcon">
               <i class="fa-solid fa-volume-xmark"></i>
             </span>
           </button>
+          <div class="language-picker" id="languagePicker">
+            <button class="language-trigger" id="languageTrigger" type="button" aria-label="Seleziona la lingua" aria-haspopup="true" aria-expanded="false" aria-controls="languageMenu">
+              <img class="language-flag" id="currentLanguageFlag" src="../images/flags/it.svg" alt="" />
+            </button>
+            <div class="language-menu" id="languageMenu" aria-label="Seleziona la lingua" data-i18n-aria-label="shared.language.label" hidden>
+              <button class="language-option" type="button" data-language="it" data-flag-src="../images/flags/it.svg" aria-pressed="true">
+                <img class="language-flag" src="../images/flags/it.svg" alt="" />
+                <span data-i18n="shared.language.italian">Italiano</span>
+              </button>
+              <button class="language-option" type="button" data-language="en" data-flag-src="../images/flags/en.svg" aria-pressed="false">
+                <img class="language-flag" src="../images/flags/en.svg" alt="" />
+                <span data-i18n="shared.language.english">Inglese</span>
+              </button>
+            </div>
+          </div>
         </div>
       </header>
       <main class="main">
-        <h2>Indovina il personaggio di One Piece!</h2>
+        <h2 data-i18n="onepiece.page.heading">Indovina il personaggio di One Piece!</h2>
 
         <div class="search-area">
           <div class="search-line">
-            <span class="glass" aria-hidden="true"><i class="fa-solid fa-magnifying-glass" style="color: rgb(0, 0, 0)"></i></span><input id="guessInput" type="text" placeholder="Cerca un personaggio…" autocomplete="off" autocapitalize="none" spellcheck="false" role="combobox" aria-autocomplete="list" aria-controls="suggestions" aria-expanded="false" aria-label="Nome del personaggio" /><button class="btn primary" id="guessBtn" type="button">
-              Prova
+            <span class="glass" aria-hidden="true"><i class="fa-solid fa-magnifying-glass" style="color: rgb(0, 0, 0)"></i></span><input id="guessInput" type="text" placeholder="Cerca un personaggio…" data-i18n-placeholder="onepiece.page.searchPlaceholder" autocomplete="off" autocapitalize="none" spellcheck="false" role="combobox" aria-autocomplete="list" aria-controls="suggestions" aria-expanded="false" aria-label="Nome del personaggio" data-i18n-aria-label="onepiece.page.searchAria" /><button class="btn primary" id="guessBtn" type="button">
+              <span data-i18n="onepiece.page.guess">Prova</span>
               <i class="fa-solid fa-paper-plane" style="color: rgb(255, 255, 255)"></i>
             </button>
           </div>
-          <div id="suggestions" class="suggestions" role="listbox" aria-label="Personaggi suggeriti"></div>
+          <div id="suggestions" class="suggestions" role="listbox" aria-label="Personaggi suggeriti" data-i18n-aria-label="onepiece.page.suggestionsAria"></div>
         </div>
         <div id="status" class="status" aria-live="polite" style="display: none"></div>
         <div id="endPanel" class="win" aria-live="polite">
           <strong id="endTitle"></strong>
           <p id="endText"></p>
           <button type="button" id="playAgain" class="btn primary">
-            Gioca ancora
+            <span data-i18n="onepiece.page.playAgain">Gioca ancora</span>
             <i class="fa-solid fa-rotate-right" style="color: rgb(255, 255, 255)"></i>
           </button>
         </div>
-        <div class="table-scroll" role="region" aria-label="Tabella dei tentativi" tabindex="0">
+        <div class="table-scroll" role="region" aria-label="Tabella dei tentativi" data-i18n-aria-label="onepiece.page.tableAria" tabindex="0">
           <table>
             <thead>
               <tr>
-                <th>Personaggio</th>
-                <th>Genere</th>
-                <th>Affiliazione</th>
-                <th>Frutto del<br />diavolo</th>
-                <th>Haki</th>
-                <th>Ultima<br />taglia</th>
-                <th>Altezza</th>
-                <th>Origine</th>
-                <th>Primo arco</th>
+                <th data-i18n="onepiece.columns.character">Personaggio</th>
+                <th data-i18n="onepiece.columns.gender">Genere</th>
+                <th data-i18n="onepiece.columns.affiliation">Affiliazione</th>
+                <th><span data-i18n="onepiece.columns.devilFruit">Frutto del diavolo</span></th>
+                <th data-i18n="onepiece.columns.haki">Haki</th>
+                <th><span data-i18n="onepiece.columns.bounty">Ultima taglia</span></th>
+                <th data-i18n="onepiece.columns.height">Altezza</th>
+                <th data-i18n="onepiece.columns.origin">Origine</th>
+                <th data-i18n="onepiece.columns.firstArc">Primo arco</th>
               </tr>
             </thead>
             <tbody id="guessRows"></tbody>
           </table>
         </div>
         <div class="legend">
-          <h3>Legenda degli indizi</h3>
+          <h3 data-i18n="onepiece.page.legend">Legenda degli indizi</h3>
           <div class="legend-grid">
             <div class="legend-item">
               <div class="legend-swatch g"></div>
-              Corretto
+              <span data-i18n="onepiece.page.correct">Corretto</span>
             </div>
             <div class="legend-item">
               <div class="legend-swatch y"></div>
-              Parziale
+              <span data-i18n="onepiece.page.partial">Parziale</span>
             </div>
             <div class="legend-item">
               <div class="legend-swatch r"></div>
-              Non corretto
+              <span data-i18n="onepiece.page.wrong">Non corretto</span>
             </div>
             <div class="legend-item">
               <div class="legend-swatch r">
                 <i class="fa-solid fa-arrow-up" style="color: rgb(255, 255, 255)"></i>
               </div>
-              Più alto
+              <span data-i18n="onepiece.page.higher">Più alto</span>
             </div>
             <div class="legend-item">
               <div class="legend-swatch r">
                 <i class="fa-solid fa-arrow-down" style="color: rgb(255, 255, 255)"></i>
               </div>
-              Più basso
+              <span data-i18n="onepiece.page.lower">Più basso</span>
             </div>
           </div>
         </div>

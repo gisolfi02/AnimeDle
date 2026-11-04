@@ -605,7 +605,6 @@ thead th {
 .legend {
   max-width: 780px;
   margin: 23px auto 2px;
-  width: min(780px, 100%);
   border: 1px solid #927345;
   border-top: 4px solid #cf8c44;
   border-radius: 12px;
@@ -703,6 +702,123 @@ thead th {
 }
 .riga-animata > td:nth-child(8) > .tile {
   animation-delay: 3.36s;
+}
+/* Animedle: selettore lingua condiviso (compatibile con la Home multilingue). */
+.nav {
+  overflow: visible;
+  z-index: 20;
+} /* Il menu deve aprirsi fuori dalla barra dello Shinobi e sopra il contenuto. */
+.language-picker {
+  position: relative;
+  flex-shrink: 0;
+  z-index: 35;
+  margin-left: 2px;
+}
+.language-trigger {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  padding: 3px;
+  border: 2px solid #f1c17c;
+  border-radius: 50%;
+  background: #193e32;
+  box-shadow: 0 3px 10px #0007;
+  cursor: pointer;
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+.language-trigger:hover,
+.language-trigger[aria-expanded="true"] {
+  border-color: #ffe9bd;
+  box-shadow:
+    0 0 0 3px #eea35133,
+    0 5px 14px #0007;
+}
+.language-trigger:hover {
+  transform: translateY(-1px);
+}
+.language-trigger:focus-visible,
+.language-option:focus-visible {
+  outline: 3px solid #e5933a;
+  outline-offset: 2px;
+}
+.language-flag {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.language-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: max-content;
+  min-width: 160px;
+  padding: 7px;
+  border: 1px solid #cf8c44;
+  border-radius: 12px;
+  background: #17392f;
+  box-shadow: 0 16px 26px #0009;
+}
+.language-menu[hidden] {
+  display: none !important;
+}
+.language-menu::before {
+  content: "";
+  position: absolute;
+  right: 15px;
+  top: -6px;
+  width: 10px;
+  height: 10px;
+  background: #17392f;
+  border-left: 1px solid #cf8c44;
+  border-top: 1px solid #cf8c44;
+  transform: rotate(45deg);
+}
+.language-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #fff0d1;
+  text-align: left;
+  font:
+    700 13px/1.2 system-ui,
+    sans-serif;
+  cursor: pointer;
+}
+.language-option .language-flag {
+  width: 27px;
+  height: 27px;
+  flex: 0 0 27px;
+  border: 1px solid #ffffff5c;
+}
+.language-option:hover,
+.language-option[aria-pressed="true"] {
+  background: #365c49;
+}
+.language-option[aria-pressed="true"]::after {
+  content: "✓";
+  color: #ffe0a7;
+  margin-left: auto;
+}
+@media (max-width: 600px) {
+  .language-trigger {
+    width: 38px;
+    height: 38px;
+  }
 }
 
 @media (max-width: 1000px) {

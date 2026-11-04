@@ -40,7 +40,59 @@
     const char = esc((c.name || "?").slice(0, 1).toUpperCase());
     return url ? `<img src="${esc(url)}" loading="lazy" alt="" referrerpolicy="no-referrer" onerror="this.style.display='none';this.parentElement.textContent='${char}'">` : `<span>${char}</span>`;
   }
-  const msg = (s) => (byId("message").textContent = s);
+  // Multilingual presentation: comparisons always use the original JSON values.
+  let guessHistory = [];
+  let notice = null;
+  let finishedWin = null;
+
+  function t(key, fallback = key) {
+    const fullKey = `dragonball.${key}`;
+    const translated = window.AnimedleI18n?.t(fullKey);
+    return typeof translated === "string" && translated !== fullKey ? translated : fallback;
+  }
+  function format(template, values = {}) {
+    return String(template).replace(/\{(\w+)\}/g, (_, field) => String(values[field] ?? ""));
+  }
+  function valueKey(value) {
+    return (
+      String(value)
+        .normalize("NFKD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^A-Za-z0-9]+/g, "_")
+        .replace(/^_+|_+$/g, "") || "empty"
+    );
+  }
+  function displayValue(group, raw) {
+    if (raw === null || raw === undefined) return "?";
+    return t(`values.${group}.${valueKey(raw)}`, String(raw));
+  }
+
+  function renderFinish() {
+    if (finishedWin === null || !secret) return;
+    byId("resultTitle").textContent = finishedWin ? t("game.winTitle", "🎉 Personaggio indovinato!") : t("game.revealTitle", "Soluzione rivelata");
+    const template = finishedWin ? t("game.winText", "Hai indovinato {name} in {count} tentativi!") : t("game.revealText", "Il personaggio segreto era {name}. Puoi ricominciare subito.");
+    byId("resultText").textContent = format(template, { name: secret.name, count: guesses.size });
+  }
+  function updateAudioLabel() {
+    const button = byId("ambientToggle"),
+      audio = byId("ambientAudio");
+    if (!button || !audio) return;
+    const label = audio.paused ? t("page.audioOff", "Attiva atmosfera") : t("page.audioOn", "Disattiva atmosfera");
+    button.setAttribute("aria-label", label);
+    button.setAttribute("title", label);
+  }
+  function onLanguageChange() {
+    // Re-create only the view: no new secret, no altered guesses or comparisons.
+    if (guessHistory.length) {
+      tbody.innerHTML = guessHistory.slice().reverse().map(render).join("");
+    }
+    renderFinish();
+    if (menu.classList.contains("open") && inp.value.trim()) search();
+    updateAudioLabel();
+  }
+  document.addEventListener("animedle:languagechange", onLanguageChange);
+  ["play", "pause"].forEach((event) => byId("ambientAudio")?.addEventListener(event, updateAudioLabel));
+  updateAudioLabel();
   function shuffle(a) {
     const x = a.slice();
     for (let i = x.length - 1; i > 0; i--) {
@@ -79,14 +131,7 @@
       .sort((a, b) => Number(!norm(a.name).startsWith(q)) - Number(!norm(b.name).startsWith(q)) || a.name.localeCompare(b.name))
       .slice(0, 12);
     active = 0;
-    menu.innerHTML = options.length
-      ? options
-          .map(
-            (c, i) =>
-              `<button type="button" role="option" class="option ${i === 0 ? "active" : ""}" data-i="${i}"><div class="mini-place">${avatar(c, true)}</div><span><strong>${esc(c.name)}</strong><small>${esc(c.series)} · ${esc(c.race)}</small></span></button>`,
-          )
-          .join("")
-      : '<div class="option">Nessun personaggio trovato</div>';
+    menu.innerHTML = options.length ? options.map((c, i) => `<button type="button" role="option" class="option ${i === 0 ? "active" : ""}" data-i="${i}"><div class="mini-place">${avatar(c, true)}</div><span><strong>${esc(c.name)}</strong><small>${esc(displayValue("series", c.series))} · ${esc(displayValue("race", c.race))}</small></span></button>`).join("") : `<div class="option">${esc(t("game.noResults", "Nessun personaggio trovato"))}</div>`;
     menu.classList.add("open");
     inp.setAttribute("aria-expanded", "true");
   }
@@ -107,17 +152,16 @@
   function tile(v, cls, extra = "") {
     return `<div class="tile ${cls} ${extra}">${v}</div>`;
   }
-  function value(v) {
-    return v === null || v === undefined ? "?" : esc(v);
+  function value(v, field) {
+    return esc(displayValue(field, v));
   }
   function card(c) {
-    const won = c.id === secret.id;
-    return tile(`<div class="photo">${avatar(c)}</div><span class="name">${esc(c.name)}</span>`, "portrait " + (won ? "hit" : ""));
+    return tile(`<div class="photo">${avatar(c)}</div><span class="name">${esc(c.name)}</span>`, "portrait ");
   }
   function cell(c, field, kind) {
     const v = c[field];
     const status = c.id === secret.id ? "correct" : state(v, secret[field], kind);
-    return tile(field === "series" ? `<span class="series-label">${value(v)}</span>` : value(v), status, field === "episode" && v === "Film" ? "film" : "");
+    return tile(field === "series" ? `<span class="series-label">${value(v, field)}</span>` : value(v, field), status, field === "episode" && v === "Film" ? "film" : "");
   }
   function render(c) {
     return `<tr><td>${card(c)}</td><td>${cell(c, "gender")}</td><td>${cell(c, "hair", "hair")}</td><td>${cell(c, "origin")}</td><td>${cell(c, "race")}</td><td>${cell(c, "saga")}</td><td>${cell(c, "series", "series")}</td></tr>`;
@@ -130,18 +174,17 @@
     close();
     byId("result").classList.add("open");
     byId("result").classList.toggle("revealed", !win);
-    byId("resultTitle").textContent = win ? "🎉 Personaggio indovinato!" : "Soluzione rivelata";
-    byId("resultText").textContent = win ? `Hai indovinato ${secret.name} in ${guesses.size} tentativi!` : `Il personaggio segreto era ${secret.name}. Puoi ricominciare quando vuoi.`;
-    msg("");
+    finishedWin = win;
+    renderFinish();
   }
   function guess(c) {
     if (!c || ended) return;
     if (guesses.has(c.id)) {
-      msg("Hai già provato questo personaggio.");
       return;
     }
     const first = guesses.size === 0;
     guesses.add(c.id);
+    guessHistory.push(c);
     if (first) tbody.innerHTML = "";
     tbody.insertAdjacentHTML("afterbegin", render(c));
     tbody.firstElementChild.classList.add("riga-animata");
@@ -151,30 +194,28 @@
       finish(true);
       return;
     }
-    msg(`${guesses.size} tentativi · ${pool.length - guesses.size} personaggi ancora da provare`);
   }
   function submit() {
     if (ended) return;
     const q = norm(inp.value);
     if (!q) {
-      msg("Scrivi un nome.");
       return;
     }
     const exact = pool.find((c) => !guesses.has(c.id) && [c.name, ...(c.aliases || [])].some((v) => norm(v) === q));
     const selected = exact || (menu.classList.contains("open") && options.length && norm(options[0].name).startsWith(q) ? options[0] : null);
     if (selected) guess(selected);
     else {
-      msg("Seleziona un personaggio dai suggerimenti.");
       search();
     }
   }
   function begin() {
     if (!pool.length) {
-      msg("Nessun personaggio disponibile.");
       return;
     }
     secret = getSecret();
     guesses.clear();
+    guessHistory = [];
+    finishedWin = null;
     ended = false;
     tbody.innerHTML = '<tr><td colspan="7" class="empty"></td></tr>';
     inp.value = "";
@@ -183,7 +224,6 @@
     byId("showAnswer").disabled = false;
     byId("result").className = "result";
     close();
-    msg(`${pool.length} personaggi · Partite infinite · Nessun limite di tentativi`);
   }
   inp.addEventListener("input", search);
   inp.addEventListener("keydown", (e) => {
@@ -213,8 +253,21 @@
   byId("submitGuess").addEventListener("click", submit);
   byId("restart").addEventListener("click", begin);
   byId("again").addEventListener("click", begin);
+
   byId("showAnswer").addEventListener("click", () => {
-    if (secret && !ended) finish(false);
+    if (secret && !ended) {
+      if (!guesses.has(secret.id)) {
+        const first = guesses.size === 0;
+
+        guesses.add(secret.id);
+        guessHistory.push(secret);
+
+        tbody.insertAdjacentHTML("afterbegin", render(secret));
+        tbody.firstElementChild.classList.add("riga-animata");
+      }
+
+      finish(false);
+    }
   });
 
   fetch("./characters.json", {
@@ -236,6 +289,5 @@
     })
     .catch((error) => {
       console.error("Errore caricamento personaggi:", error);
-      msg("Impossibile caricare i personaggi. Riprova ad aggiornare la pagina.");
     });
 })();

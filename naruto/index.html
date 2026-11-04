@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
     <meta name="theme-color" content="#b84e24" />
     <script src="https://kit.fontawesome.com/7d86f6057b.js" crossorigin="anonymous"></script>
+    <script src="../js/i18n.js" defer></script>
     <script src="../js/naruto.js" defer></script>
+    <script src="../js/naruto-i18n.js" defer></script>
     <script src="../js/ambient.js" defer></script>
     <link rel="icon" type="image/png" href="../images/logo.png" />
     <link rel="stylesheet" href="../styles/naruto.css" />
@@ -26,35 +28,50 @@
         <div class="actions">
           <a class="btn" href="../index.html">
             <i class="fa-solid fa-arrow-left" style="color: rgb(113, 55, 36)"></i>
-            Tutti i giochi
+            <span data-i18n="naruto.page.allGames">Tutti i giochi</span>
           </a>
-          <button type="button" id="showAnswer" class="btn"><i class="fas fa-lightbulb"></i> Mostra soluzione</button>
+          <button type="button" id="showAnswer" class="btn"><i class="fas fa-lightbulb"></i> <span data-i18n="naruto.page.reveal">Mostra soluzione</span></button>
           <button type="button" id="restart" class="btn primary">
             <i class="fa-solid fa-rotate-right" style="color: rgb(255, 255, 255)"></i>
-            Nuova partita
+            <span data-i18n="naruto.page.newGame">Nuova partita</span>
           </button>
-          <button class="btn" id="ambientToggle" type="button" aria-pressed="false">
+          <button class="btn" id="ambientToggle" type="button" aria-pressed="false" aria-label="Attiva atmosfera">
             <span id="ambientIcon">
               <i class="fa-solid fa-volume-xmark"></i>
             </span>
           </button>
+          <div class="language-picker" id="languagePicker">
+            <button class="language-trigger" id="languageTrigger" type="button" aria-label="Seleziona la lingua" aria-haspopup="true" aria-expanded="false" aria-controls="languageMenu">
+              <img class="language-flag" id="currentLanguageFlag" src="../images/flags/it.svg" alt="" />
+            </button>
+            <div class="language-menu" id="languageMenu" aria-label="Seleziona la lingua" data-i18n-aria-label="shared.language.label" hidden>
+              <button class="language-option" type="button" data-language="it" data-flag-src="../images/flags/it.svg" lang="it" aria-pressed="true">
+                <img class="language-flag" src="../images/flags/it.svg" alt="" />
+                <span data-i18n="shared.language.italian">Italiano</span>
+              </button>
+              <button class="language-option" type="button" data-language="en" data-flag-src="../images/flags/en.svg" lang="en" aria-pressed="false">
+                <img class="language-flag" src="../images/flags/en.svg" alt="" />
+                <span data-i18n="shared.language.english">Inglese</span>
+              </button>
+            </div>
+          </div>
         </div>
       </header>
       <main>
-        <h2>Indovina il personaggio di Naruto!</h2>
+        <h2 data-i18n="naruto.page.heading">Indovina il personaggio di Naruto!</h2>
 
         <div class="input-wrap">
           <div class="input-line">
             <span class="search-icon" aria-hidden="true">
               <i class="fa-solid fa-magnifying-glass" style="color: rgb(0, 0, 0)"></i>
             </span>
-            <input id="guessInput" type="search" placeholder="Cerca un personaggio…" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" role="combobox" aria-label="Nome del personaggio" aria-controls="matches" aria-expanded="false" />
+            <input id="guessInput" type="search" placeholder="Cerca un personaggio…" data-i18n-placeholder="naruto.page.searchPlaceholder" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" role="combobox" aria-label="Nome del personaggio" data-i18n-aria-label="naruto.page.searchAria" aria-controls="matches" aria-expanded="false" />
             <button type="button" class="btn primary" id="submitGuess">
-              Prova
+              <span data-i18n="naruto.page.guess">Prova</span>
               <i class="fa-solid fa-paper-plane" style="color: rgb(255, 255, 255)"></i>
             </button>
           </div>
-          <div class="dropdown" role="listbox" id="matches"></div>
+          <div class="dropdown" role="listbox" id="matches" aria-label="Personaggi suggeriti" data-i18n-aria-label="naruto.page.suggestionsAria"></div>
         </div>
 
         <div id="message" class="msg" role="status" aria-live="polite" style="display: none"></div>
@@ -62,38 +79,38 @@
           <strong id="resultTitle"></strong>
           <p id="resultText"></p>
           <button id="again" type="button" class="btn primary">
-            Gioca ancora
+            <span data-i18n="naruto.page.playAgain">Gioca ancora</span>
             <i class="fa-solid fa-rotate-right" style="color: rgb(255, 255, 255)"></i>
           </button>
         </div>
         <div class="table-scroll">
-          <table aria-label="Tentativi e indizi">
+          <table aria-label="Tentativi e indizi" data-i18n-aria-label="naruto.page.tableAria">
             <thead>
               <tr>
-                <th>Personaggio</th>
-                <th>Genere</th>
-                <th>Affiliazioni</th>
-                <th>Tipi di Jutsu</th>
-                <th>Kekkei Genkai</th>
-                <th>Nature del chakra</th>
-                <th>Attributi</th>
-                <th>Arco di debutto</th>
+                <th data-i18n="naruto.columns.character">Personaggio</th>
+                <th data-i18n="naruto.columns.gender">Genere</th>
+                <th data-i18n="naruto.columns.affiliations">Affiliazioni</th>
+                <th data-i18n="naruto.columns.jutsuTypes">Tipi di Jutsu</th>
+                <th data-i18n="naruto.columns.kekkeiGenkai">Kekkei Genkai</th>
+                <th data-i18n="naruto.columns.chakraNatures">Nature del chakra</th>
+                <th data-i18n="naruto.columns.attributes">Attributi</th>
+                <th data-i18n="naruto.columns.debutArc">Arco di debutto</th>
               </tr>
             </thead>
             <tbody id="guessRows"></tbody>
           </table>
         </div>
         <div class="legend">
-          <h3>Legenda degli indizi</h3>
+          <h3 data-i18n="naruto.page.legend">Legenda degli indizi</h3>
           <div class="legend-grid">
-            <div class="legend-item"><span class="swatch green"></span>Corretto</div>
-            <div class="legend-item"><span class="swatch yellow"></span>Parziale</div>
-            <div class="legend-item"><span class="swatch red"></span>Non corretto</div>
+            <div class="legend-item"><span class="swatch green"></span><span data-i18n="naruto.page.correct">Corretto</span></div>
+            <div class="legend-item"><span class="swatch yellow"></span><span data-i18n="naruto.page.partial">Parziale</span></div>
+            <div class="legend-item"><span class="swatch red"></span><span data-i18n="naruto.page.wrong">Non corretto</span></div>
             <div class="legend-item">
-              <span class="swatch red"><i class="fa-solid fa-arrow-up" style="color: rgb(255, 255, 255)"></i></span>Più alto
+              <span class="swatch red"><i class="fa-solid fa-arrow-up" style="color: rgb(255, 255, 255)"></i></span><span data-i18n="naruto.page.higher">Più alto</span>
             </div>
             <div class="legend-item">
-              <span class="swatch red"><i class="fa-solid fa-arrow-down" style="color: rgb(255, 255, 255)"></i></span>Più basso
+              <span class="swatch red"><i class="fa-solid fa-arrow-down" style="color: rgb(255, 255, 255)"></i></span><span data-i18n="naruto.page.lower">Più basso</span>
             </div>
           </div>
         </div>

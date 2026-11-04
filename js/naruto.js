@@ -128,9 +128,8 @@
   }
 
   function renderGuess(c) {
-    const hit = c.id === secret.id;
     let url = esc(safeImg(c.image_url));
-    let picture = `<div class="tile portrait ${hit ? "hit" : ""}"><div class="portrait-media"><b>${esc(c.name.charAt(0).toUpperCase())}</b><img src="${url}" loading="lazy" referrerpolicy="no-referrer" alt="" onerror="this.style.display='none'"></div><span class="name">${esc(c.name)}</span></div>`;
+    let picture = `<div class="tile portrait"><div class="portrait-media"><b>${esc(c.name.charAt(0).toUpperCase())}</b><img src="${url}" loading="lazy" referrerpolicy="no-referrer" alt="" onerror="this.style.display='none'"></div><span class="name">${esc(c.name)}</span></div>`;
     return `<tr><td>${picture}</td><td>${tile(esc(c.gender), scalarState(c.gender, secret.gender))}</td><td>${tile(textLabels(c.affiliations), arrState(c.affiliations, secret.affiliations))}</td><td>${tile(textLabels(c.jutsu_types), arrState(c.jutsu_types, secret.jutsu_types))}</td><td>${tile(textLabels(c.kekkei_genkai_types), arrState(c.kekkei_genkai_types, secret.kekkei_genkai_types))}</td><td>${tile(natureLabels(onlyFive(c.nature_types)), arrState(onlyFive(c.nature_types), onlyFive(secret.nature_types)))}</td><td>${tile(textLabels(c.attributes), arrState(c.attributes, secret.attributes))}</td><td>${arcTile(c, secret)}</td></tr>`;
   }
   function finish(win) {
@@ -227,7 +226,18 @@
   byId("restart").addEventListener("click", begin);
   byId("again").addEventListener("click", begin);
   byId("showAnswer").addEventListener("click", () => {
-    if (secret && !ended) finish(false);
+    if (secret && !ended) {
+      if (!guesses.has(secret.id)) {
+        const first = guesses.size === 0;
+
+        guesses.add(secret.id);
+
+        rows.insertAdjacentHTML("afterbegin", renderGuess(secret));
+        rows.firstElementChild.classList.add("riga-animata");
+      }
+
+      finish(false);
+    }
   });
   // On GitHub Pages characters.json is the editable source of truth.
   // file:// local opens use the embedded fallback to work without any server.
@@ -245,4 +255,223 @@
     .catch((e) => {
       status("Impossibile caricare il dataset: " + e.message);
     });
+
+  /* ==========================================================
+   * Naruto — Localizzazione IT / EN integrata nel gioco
+   * Si appoggia al motore condiviso js/i18n.js, senza
+   * alterare JSON, tentativi, confronti o animazioni.
+   * ========================================================== */
+
+  const originals = new WeakMap();
+  const originalTitles = new WeakMap();
+  const originalAriaLabels = new WeakMap();
+
+  function t(key, fallback = key) {
+    const result = window.AnimedleI18n?.t(key);
+    return typeof result === "string" && result !== key ? result : fallback;
+  }
+
+  function format(template, values = {}) {
+    return template.replace(/\{(\w+)\}/g, (_, id) => String(values[id] ?? ""));
+  }
+
+  // Identical, stable keys to those generated from the JSON dataset.
+  function valueKey(input) {
+    return (
+      String(input)
+        .normalize("NFKD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^A-Za-z0-9]+/g, "_")
+        .replace(/^_+|_+$/g, "") || "empty"
+    );
+  }
+
+  function val(group, original) {
+    if (!original) return original;
+    return t(`naruto.values.${group}.${valueKey(original)}`, original);
+  }
+
+  function translatedValue(group, original) {
+    if (original === "Nessuno") return t("naruto.game.none", original);
+    if (original === "Nessuna") return t("naruto.game.noneF", original);
+    if (original === "Affiliazione non nota") {
+      return t("naruto.game.unknownAffiliation", original);
+    }
+    return val(group, original);
+  }
+
+  // The searchable affiliation preview contains a comma-separated list,
+  // whereas clue-table values are rendered as individual <span> elements.
+  function affiliationPreview(original) {
+    if (original === "Affiliazione non nota") return translatedValue("affiliations", original);
+    return original
+      .split(", ")
+      .map((entry) => translatedValue("affiliations", entry))
+      .join(", ");
+  }
+
+  function setNode(node, converter) {
+    if (node.nodeType !== Node.TEXT_NODE) return;
+    if (!originals.has(node)) originals.set(node, node.nodeValue);
+    const raw = originals.get(node);
+    const parts = raw.match(/^(\s*)([\s\S]*?)(\s*)$/);
+    if (!parts || !parts[2]) return;
+    const replacement = converter(parts[2]);
+    const next = parts[1] + replacement + parts[3];
+    if (node.nodeValue !== next) node.nodeValue = next;
+  }
+
+  function textNodes(element, converter, excludedSelector = null) {
+    const walk = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+    let node;
+    while ((node = walk.nextNode())) {
+      if (excludedSelector && node.parentElement?.closest(excludedSelector)) continue;
+      setNode(node, converter);
+    }
+  }
+
+  function title(element, converter) {
+    if (!originalTitles.has(element)) originalTitles.set(element, element.getAttribute("title"));
+    const raw = originalTitles.get(element);
+    if (raw == null) return;
+    const next = converter(raw);
+    if (element.getAttribute("title") !== next) element.setAttribute("title", next);
+  }
+
+  function gameMessage(original) {
+    const keyMap = {
+      "Nessun personaggio trovato": "noResults",
+      "Affiliazione non nota": "unknownAffiliation",
+      "Hai già provato questo personaggio.": "alreadyGuessed",
+      "Scrivi un nome per iniziare.": "emptySearch",
+      "Seleziona un personaggio dall’elenco dei suggerimenti.": "selectCharacter",
+      "Seleziona un personaggio dall'elenco dei suggerimenti.": "selectCharacter",
+      "Nessun personaggio disponibile.": "noCharacters",
+      "🎉 Personaggio indovinato!": "winTitle",
+      "Soluzione rivelata": "revealTitle",
+    };
+    if (keyMap[original]) return t(`naruto.game.${keyMap[original]}`, original);
+
+    let match = original.match(/^(\d+) personaggi · Partite infinite · Nessun limite di tentativi$/);
+    if (match) return format(t("naruto.game.intro", original), { total: match[1] });
+
+    match = original.match(/^Tentativi: (\d+) · (\d+) personaggi ancora da provare$/);
+    if (match) return format(t("naruto.game.attempts", original), { count: match[1], remaining: match[2] });
+
+    match = original.match(/^Hai trovato (.+) in (\d+) tentativ[oi]!$/);
+    if (match) return format(t("naruto.game.winText", original), { name: match[1], count: match[2] });
+
+    match = original.match(/^Il personaggio segreto era (.+)\. Puoi ricominciare subito\.$/);
+    if (match) return format(t("naruto.game.revealText", original), { name: match[1] });
+
+    match = original.match(/^Impossibile caricare il dataset: (.*)$/);
+    if (match) return format(t("naruto.game.loadError", original), { detail: match[1] });
+
+    return original;
+  }
+
+  function translateRow(row) {
+    const groupByColumn = {
+      1: "gender",
+      2: "affiliations",
+      3: "jutsu",
+      4: "kekkei",
+      5: "nature",
+      6: "attributes",
+      7: "arc",
+    };
+    Array.from(row.cells).forEach((cell, index) => {
+      const group = groupByColumn[index];
+      if (!group) return; // Leave the character's name and portrait untouched.
+      textNodes(cell, (original) => translatedValue(group, original), ".arrow,.nature-emoji");
+      if (index === 5)
+        cell.querySelectorAll(".nitem[title]").forEach((item) => {
+          title(item, (raw) => translatedValue("nature", raw));
+        });
+      if (index === 7)
+        cell.querySelectorAll(".arc-direction[title]").forEach((arrow) => {
+          const localizeDirection = (raw) => {
+            if (raw === "Soluzione in un arco successivo") return t("naruto.game.arcLater", raw);
+            if (raw === "Soluzione in un arco precedente") return t("naruto.game.arcEarlier", raw);
+            return raw;
+          };
+          title(arrow, localizeDirection);
+          if (!originalAriaLabels.has(arrow)) {
+            originalAriaLabels.set(arrow, arrow.getAttribute("aria-label"));
+          }
+          const rawAria = originalAriaLabels.get(arrow);
+          if (rawAria) {
+            const separator = " — ";
+            const pos = rawAria.lastIndexOf(separator);
+            if (pos >= 0) {
+              const arcName = rawAria.slice(0, pos);
+              const direction = rawAria.slice(pos + separator.length);
+              arrow.setAttribute("aria-label", `${translatedValue("arc", arcName)} — ${localizeDirection(direction)}`);
+            }
+          }
+        });
+    });
+  }
+
+  function updateAudioLabel() {
+    const button = byId("ambientToggle");
+    const audio = byId("ambientAudio");
+    if (!button || !audio) return;
+    const key = audio.paused ? "audioOff" : "audioOn";
+    const next = t(`naruto.page.${key}`, audio.paused ? "Attiva atmosfera" : "Disattiva atmosfera");
+    button.setAttribute("aria-label", next);
+    button.setAttribute("title", next);
+  }
+
+  function update() {
+    byId("guessRows")?.querySelectorAll("tr").forEach(translateRow);
+
+    // Only replace preview descriptions, never character names or input values.
+    byId("matches")
+      ?.querySelectorAll(".option .opt-sub")
+      .forEach((element) => {
+        textNodes(element, affiliationPreview);
+      });
+    byId("matches")
+      ?.querySelectorAll(".option:not(button)")
+      .forEach((element) => {
+        textNodes(element, gameMessage);
+      });
+    ["message", "resultTitle", "resultText"].forEach((id) => {
+      const element = byId(id);
+      if (element) textNodes(element, gameMessage);
+    });
+    updateAudioLabel();
+  }
+
+  function start() {
+    let scheduled = false;
+    const schedule = () => {
+      if (scheduled) return;
+      scheduled = true;
+      Promise.resolve().then(() => {
+        scheduled = false;
+        update();
+      });
+    };
+
+    ["guessRows", "matches", "message", "resultTitle", "resultText"].forEach((id) => {
+      const target = byId(id);
+      if (target)
+        new MutationObserver(schedule).observe(target, {
+          childList: true,
+          subtree: true,
+          characterData: true,
+        });
+    });
+    document.addEventListener("animedle:languagechange", schedule);
+    ["play", "pause"].forEach((event) => byId("ambientAudio")?.addEventListener(event, schedule));
+    schedule();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", start, { once: true });
+  } else {
+    start();
+  }
 })();

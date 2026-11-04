@@ -6,6 +6,7 @@
     <meta name="theme-color" content="#0a0d13" />
     <title>Bleachdle</title>
     <script src="https://kit.fontawesome.com/7d86f6057b.js" crossorigin="anonymous"></script>
+    <script src="../js/i18n.js" defer></script>
     <script src="../js/bleach.js" defer></script>
     <script src="../js/ambient.js" defer></script>
     <link rel="stylesheet" href="../styles/bleach.css" />
@@ -21,73 +22,88 @@
           <h1>Bleachdle</h1>
         </div>
         <div class="actions">
-          <a class="btn" href="../index.html"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Tutti i giochi</a>
-          <button id="reveal" type="button" class="btn"><i class="fa-solid fa-lightbulb" aria-hidden="true"></i> Mostra soluzione</button>
-          <button id="new" type="button" class="btn primary"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Nuova partita</button>
-          <button class="btn" id="ambientToggle" type="button" aria-pressed="false">
+          <a class="btn" href="../index.html"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> <span data-i18n="bleach.page.allGames">Tutti i giochi</span></a>
+          <button id="reveal" type="button" class="btn"><i class="fa-solid fa-lightbulb" aria-hidden="true"></i> <span data-i18n="bleach.page.reveal">Mostra soluzione</span></button>
+          <button id="new" type="button" class="btn primary"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> <span data-i18n="bleach.page.newGame">Nuova partita</span></button>
+          <button class="btn" id="ambientToggle" type="button" aria-pressed="false" aria-label="Attiva atmosfera">
             <span id="ambientIcon">
               <i class="fa-solid fa-volume-xmark"></i>
             </span>
           </button>
+          <div class="language-picker" id="languagePicker">
+            <button class="language-trigger" id="languageTrigger" type="button" aria-label="Seleziona la lingua" aria-haspopup="true" aria-expanded="false" aria-controls="languageMenu">
+              <img class="language-flag" id="currentLanguageFlag" src="../images/flags/it.svg" alt="" />
+            </button>
+            <div class="language-menu" id="languageMenu" aria-label="Seleziona la lingua" data-i18n-aria-label="shared.language.label" hidden>
+              <button class="language-option" type="button" data-language="it" data-flag-src="../images/flags/it.svg" lang="it" aria-pressed="true">
+                <img class="language-flag" src="../images/flags/it.svg" alt="" />
+                <span data-i18n="shared.language.italian">Italiano</span>
+              </button>
+              <button class="language-option" type="button" data-language="en" data-flag-src="../images/flags/en.svg" lang="en" aria-pressed="false">
+                <img class="language-flag" src="../images/flags/en.svg" alt="" />
+                <span data-i18n="shared.language.english">Inglese</span>
+              </button>
+            </div>
+          </div>
         </div>
       </header>
       <main class="game-panel">
-        <h2>Indovina il personaggio di Bleach!</h2>
+        <h2 data-i18n="bleach.page.heading">Indovina il personaggio di Bleach!</h2>
 
         <p class="desc" style="display: none"></p>
         <div class="input-wrap">
           <form class="input-line" id="guess-form" autocomplete="off">
             <span class="search-icon" aria-hidden="true"><i class="fa-solid fa-magnifying-glass"></i></span>
-            <input id="search" type="search" placeholder="Cerca un personaggio…" aria-label="Nome del personaggio" aria-controls="dropdown" aria-expanded="false" enterkeyhint="search" autocorrect="off" autocapitalize="none" spellcheck="false" />
-            <button class="btn primary" id="try" type="submit" disabled>Prova <i class="fa-solid fa-paper-plane" aria-hidden="true"></i></button>
+            <input id="search" type="search" placeholder="Cerca un personaggio…" data-i18n-placeholder="bleach.page.searchPlaceholder" aria-label="Nome del personaggio" data-i18n-aria-label="bleach.page.searchAria" aria-controls="dropdown" aria-expanded="false" enterkeyhint="search" autocorrect="off" autocapitalize="none" spellcheck="false" />
+            <button class="btn primary" id="try" type="submit" disabled><span data-i18n="bleach.page.guess">Prova</span> <i class="fa-solid fa-paper-plane" aria-hidden="true"></i></button>
           </form>
-          <div class="dropdown" id="dropdown" role="listbox" hidden></div>
+          <div class="dropdown" id="dropdown" role="listbox" aria-label="Personaggi suggeriti" data-i18n-aria-label="bleach.page.suggestionsAria" hidden></div>
         </div>
         <div class="msg-bar" aria-live="polite">
-          <span class="message" id="message" role="status" style="display: none">Caricamento dei personaggi...</span>
+          <span class="message" id="message" role="status" style="display: none" data-i18n="bleach.game.loading">Caricamento dei personaggi...</span>
           <span class="count" id="count" style="display: none"></span>
         </div>
         <div id="result" class="result" aria-live="polite">
           <strong id="resultTitle"></strong>
           <p id="resultText"></p>
           <button id="again" type="button" class="btn primary">
-            Gioca ancora
+            <span data-i18n="bleach.page.playAgain">Gioca ancora</span>
             <i class="fa-solid fa-rotate-right" aria-hidden="true"></i>
           </button>
         </div>
-        <p class="scrollhelp" style="display: none">Scorri orizzontalmente per vedere tutti gli indizi →</p>
-        <div class="table-scroll" tabindex="0" aria-label="Tabella degli indizi; scorri orizzontalmente su mobile">
-          <table aria-label="Tentativi e indizi">
+        <p class="scrollhelp" style="display: none" data-i18n="bleach.page.scrollHelp">Scorri orizzontalmente per vedere tutti gli indizi →</p>
+        <div class="table-scroll" tabindex="0" aria-label="Tabella degli indizi; scorri orizzontalmente su mobile" data-i18n-aria-label="bleach.page.scrollTableAria">
+          <table aria-label="Tentativi e indizi" data-i18n-aria-label="bleach.page.tableAria">
             <thead>
               <tr>
-                <th>Personaggio</th>
-                <th>Genere</th>
-                <th>Altezza</th>
-                <th>Razza</th>
-                <th>Professione</th>
-                <th>Luogo</th>
-                <th>Affiliazione</th>
-                <th>Primo arco</th>
+                <th data-i18n="bleach.columns.character">Personaggio</th>
+                <th data-i18n="bleach.columns.gender">Genere</th>
+                <th data-i18n="bleach.columns.height">Altezza</th>
+                <th data-i18n="bleach.columns.race">Razza</th>
+                <th data-i18n="bleach.columns.profession">Professione</th>
+                <th data-i18n="bleach.columns.location">Luogo</th>
+                <th data-i18n="bleach.columns.affiliation">Affiliazione</th>
+                <th data-i18n="bleach.columns.firstArc">Primo arco</th>
               </tr>
             </thead>
             <tbody id="attempts">
               <tr>
-                <td colspan="8" class="empty" style="display: none">Seleziona un personaggio e premi «Prova».</td>
+                <td colspan="8" class="empty" style="display: none" data-i18n="bleach.game.emptyTable">Seleziona un personaggio e premi «Prova».</td>
               </tr>
             </tbody>
           </table>
         </div>
-        <section class="legend" aria-label="Legenda degli indizi">
-          <h3>Legenda degli indizi</h3>
+        <section class="legend" aria-label="Legenda degli indizi" data-i18n-aria-label="bleach.page.legend">
+          <h3 data-i18n="bleach.page.legend">Legenda degli indizi</h3>
           <div class="legend-grid">
-            <div class="legend-item"><span class="swatch green"></span>Corretto</div>
-            <div class="legend-item"><span class="swatch yellow"></span>Parziale</div>
-            <div class="legend-item"><span class="swatch red"></span>Non corretto</div>
+            <div class="legend-item"><span class="swatch green"></span><span data-i18n="bleach.page.correct">Corretto</span></div>
+            <div class="legend-item"><span class="swatch yellow"></span><span data-i18n="bleach.page.partial">Parziale</span></div>
+            <div class="legend-item"><span class="swatch red"></span><span data-i18n="bleach.page.wrong">Non corretto</span></div>
             <div class="legend-item">
-              <span class="swatch red"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></span>Più alto
+              <span class="swatch red"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></span><span data-i18n="bleach.page.higher">Più alto</span>
             </div>
             <div class="legend-item">
-              <span class="swatch red"><i class="fa-solid fa-arrow-down" aria-hidden="true"></i></span>Più basso
+              <span class="swatch red"><i class="fa-solid fa-arrow-down" aria-hidden="true"></i></span><span data-i18n="bleach.page.lower">Più basso</span>
             </div>
           </div>
         </section>
