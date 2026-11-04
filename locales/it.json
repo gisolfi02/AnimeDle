@@ -3,7 +3,10 @@
     "language": {
       "label": "Seleziona la lingua",
       "italian": "Italiano",
-      "english": "Inglese"
+      "english": "Inglese",
+      "spanish": "Spagnolo",
+      "french": "Francese",
+      "german": "Tedesco"
     }
   },
   "home": {

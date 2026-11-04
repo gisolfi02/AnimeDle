@@ -24,6 +24,15 @@
           "'": "&#39;",
         })[c],
     );
+  const numberLocales = {
+    it: "it-IT",
+    en: "en-GB",
+    es: "es-ES",
+    fr: "fr-FR",
+    de: "de-DE",
+  };
+
+  const numberLocale = numberLocales[window.AnimedleI18n?.getLanguage()] || "it-IT";
   // Non modifichiamo mai i valori nel JSON: traduciamo solo quanto si vede.
   const translate = (key, fallback = key) => {
     const value = window.AnimedleI18n?.t(key);
@@ -194,10 +203,10 @@
     if (x === 0) return "0 ฿";
     if (x >= 1e9) return `${numFmt(x / 1e9)} ${gm("billions", "Mld")}`;
     if (x >= 1e6) return `${numFmt(x / 1e6)} ${gm("millions", "Mln")}`;
-    return x.toLocaleString(window.AnimedleI18n?.getLanguage() === "en" ? "en-GB" : "it-IT") + " ฿";
+    return x.toLocaleString(numberLocale) + " ฿";
   }
   function numFmt(n) {
-    return Number(n.toFixed(3)).toLocaleString(window.AnimedleI18n?.getLanguage() === "en" ? "en-GB" : "it-IT", {
+    return Number(n.toFixed(3)).toLocaleString(numberLocale, {
       maximumFractionDigits: 3,
     });
   }

@@ -5,7 +5,7 @@
 (() => {
   "use strict";
 
-  const LANGUAGES = ["it", "en"];
+  const LANGUAGES = ["it", "en", "es", "fr", "de"];
   const STORAGE_KEY = "animedle-language";
   const defaultLanguage = "it";
   const script = document.currentScript;
@@ -25,8 +25,11 @@
   }
 
   function saveLanguage(language) {
-    try { window.localStorage.setItem(STORAGE_KEY, language); }
-    catch { /* Storage may be unavailable (private browsing, privacy settings). */ }
+    try {
+      window.localStorage.setItem(STORAGE_KEY, language);
+    } catch {
+      /* Storage may be unavailable (private browsing, privacy settings). */
+    }
   }
 
   function findTranslation(source, key) {
@@ -76,7 +79,15 @@
     const trigger = document.getElementById("languageTrigger");
     if (activeOption && activeFlag) activeFlag.src = activeOption.dataset.flagSrc;
     if (trigger) {
-      const activeName = findTranslation(dictionary, `shared.language.${currentLanguage === "it" ? "italian" : "english"}`);
+      const languageNames = {
+        it: "italian",
+        en: "english",
+        es: "spanish",
+        fr: "french",
+        de: "german",
+      };
+
+      const activeName = findTranslation(dictionary, `shared.language.${languageNames[currentLanguage]}`) || currentLanguage;
       const action = findTranslation(dictionary, "shared.language.label");
       trigger.setAttribute("aria-label", `${action}: ${activeName}`);
       trigger.title = activeName;
@@ -94,9 +105,11 @@
       dictionary = translations;
       translatePage();
       saveLanguage(language);
-      document.dispatchEvent(new CustomEvent("animedle:languagechange", {
-        detail: { language }
-      }));
+      document.dispatchEvent(
+        new CustomEvent("animedle:languagechange", {
+          detail: { language },
+        }),
+      );
     } catch (error) {
       console.error("Animedle: cannot load translations", error);
       if (request === latestRequest) translatePage(); // Restore button state.
@@ -152,7 +165,7 @@
   window.AnimedleI18n = {
     getLanguage: () => currentLanguage,
     t: (key) => findTranslation(dictionary, key) ?? key,
-    changeLanguage
+    changeLanguage,
   };
 
   if (document.readyState === "loading") {
