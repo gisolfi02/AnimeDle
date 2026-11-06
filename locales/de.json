@@ -445,6 +445,13 @@
       "audioOff": "Hintergrundmusik einschalten",
       "audioOn": "Hintergrundmusik ausschalten"
     },
+    "hints": {
+      "title": "Hinweise",
+      "debutArc": "Debüt-Arc",
+      "lockedOne": "Noch {count} Versuch bis zur Freischaltung",
+      "lockedMany": "Noch {count} Versuche bis zur Freischaltung",
+      "clickToReveal": "Klicken zum Aufdecken"
+    },
     "columns": {
       "character": "Figur",
       "gender": "Geschlecht",

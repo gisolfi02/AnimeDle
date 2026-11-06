@@ -18,9 +18,9 @@
     shown = [],
     selected = null,
     choice = -1;
-
+  let playerGuessCount = 0;
+  const revealedHints = new Set();
   // Multilingual presentation. All comparisons use the ORIGINAL characters.json.
-  let messageState = null;
   let endingState = null;
   const fields = Object.keys(labels);
 
@@ -71,6 +71,7 @@
   }
   function setEnding(revealed = false) {
     endingState = { revealed };
+    updateHints();
     refreshEnding();
   }
   function updateAudioLabel() {
@@ -98,6 +99,7 @@
     refreshEnding();
     if (!$("dropdown").hidden && $("search").value.trim()) showMatches();
     updateAudioLabel();
+    updateHints();
   }
   document.addEventListener("animedle:languagechange", onLanguageChange);
   ["play", "pause"].forEach((event) => $("ambientAudio")?.addEventListener(event, updateAudioLabel));
@@ -150,7 +152,7 @@
     if (!q.trim()) return [];
     let n = norm(q);
     return pool
-      .filter((c) => [c.name, ...(c.aliases || [])].some((x) => norm(x).includes(n)))
+      .filter((c) => !tried.has(c.id) && [c.name, ...(c.aliases || [])].some((x) => norm(x).includes(n)))
       .sort((a, b) => Number(norm(b.name).startsWith(n)) - Number(norm(a.name).startsWith(n)) || a.name.localeCompare(b.name))
       .slice(0, 12);
   };
@@ -248,6 +250,70 @@
     for (const key of Object.keys(labels)) tr.append(cell(c, key));
     tbody.prepend(tr);
   }
+
+  function updateHints() {
+    const panel = $("hintPanel");
+    if (!panel) return;
+
+    // In Bleach si usa "win" anche quando viene
+    // mostrata manualmente la soluzione.
+    panel.hidden = !secret || win || playerGuessCount === 0;
+    if (panel.hidden) return;
+
+    // Riutilizza le traduzioni già presenti di One Piece.
+    function hintText(key, fallback) {
+      const path = `onepiece.hints.${key}`;
+      const translated = window.AnimedleI18n?.t(path);
+
+      return typeof translated === "string" && translated !== path ? translated : fallback;
+    }
+
+    const hints = [
+      {
+        id: "hintArc",
+        type: "arc",
+        unlockAt: 5,
+        value: translatedValue("first_arc", secret.first_arc),
+      },
+      {
+        id: "hintAffiliation",
+        type: "affiliation",
+        unlockAt: 8,
+        value: translatedValue("affiliation", secret.affiliation),
+      },
+    ];
+
+    for (const hint of hints) {
+      const element = $(hint.id);
+      if (!element) continue;
+
+      const card = element.closest(".hint-card");
+
+      const remaining = Math.max(0, hint.unlockAt - playerGuessCount);
+
+      const unlocked = remaining === 0;
+      const revealed = revealedHints.has(hint.type);
+
+      if (!unlocked) {
+        const key = remaining === 1 ? "lockedOne" : "lockedMany";
+
+        const fallback = remaining === 1 ? "Si sblocca tra {count} tentativo" : "Si sblocca tra {count} tentativi";
+
+        element.textContent = interpolate(hintText(key, fallback), { count: remaining });
+      } else if (!revealed) {
+        element.textContent = hintText("clickToReveal", "Clicca per rivelare");
+      } else {
+        element.textContent = hint.value;
+      }
+
+      card.disabled = !unlocked || revealed;
+
+      card.classList.toggle("available", unlocked && !revealed);
+
+      card.classList.toggle("unlocked", revealed);
+    }
+  }
+
   function tryGuess() {
     if (!secret) {
       return;
@@ -268,10 +334,12 @@
     if (tried.has(c.id)) {
       return;
     }
+    playerGuessCount++;
     tried.add(c.id);
     render(c);
     refreshCount();
     $("search").value = "";
+    updateHints();
     selected = null;
     toggleDropdown(false);
     if (c.id === secret.id) {
@@ -293,6 +361,9 @@
     tried.clear();
     win = false;
     selected = null;
+    playerGuessCount = 0;
+    revealedHints.clear();
+    updateHints();
     $("attempts").replaceChildren();
     const tr = el("tr");
     const empty = el("td", "empty", "");
@@ -347,9 +418,31 @@
       render(secret);
     }
     win = true;
+
     $("try").disabled = true;
     setEnding(true);
   });
+
+  $("hintPanel").addEventListener("click", (event) => {
+    const card = event.target.closest(".hint-card");
+
+    if (!card || win || card.disabled) return;
+
+    const hint = card.dataset.hint;
+
+    const unlockAt = {
+      arc: 5,
+      affiliation: 8,
+    }[hint];
+
+    if (!unlockAt || playerGuessCount < unlockAt || revealedHints.has(hint)) {
+      return;
+    }
+
+    revealedHints.add(hint);
+    updateHints();
+  });
+
   fetch("./characters.json", { cache: "no-store" })
     .then((r) => {
       if (!r.ok) throw new Error("HTTP " + r.status);

@@ -445,6 +445,13 @@
       "audioOff": "Enable ambient sound",
       "audioOn": "Disable ambient sound"
     },
+    "hints": {
+      "title": "Hints",
+      "debutArc": "Debut arc",
+      "lockedOne": "Unlocks in {count} guess",
+      "lockedMany": "Unlocks in {count} guesses",
+      "clickToReveal": "Click to reveal"
+    },
     "columns": {
       "character": "Character",
       "gender": "Gender",

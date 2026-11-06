@@ -542,6 +542,13 @@
       "audioOff": "Attiva atmosfera",
       "audioOn": "Disattiva atmosfera"
     },
+    "hints": {
+      "title": "Indizi",
+      "debutArc": "Arco di debutto",
+      "lockedOne": "Si sblocca tra {count} tentativo",
+      "lockedMany": "Si sblocca tra {count} tentativi",
+      "clickToReveal": "Clicca per rivelare"
+    },
     "columns": {
       "character": "Personaggio",
       "gender": "Genere",
