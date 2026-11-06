@@ -66,6 +66,13 @@
       "audioOn": "Turn ambience off",
       "audioOff": "Turn ambience on"
     },
+    "hints": {
+      "title": "Additional clues",
+      "debutArc": "Debut arc",
+      "lockedOne": "Unlocks in {count} guess",
+      "lockedMany": "Unlocks in {count} guesses",
+      "clickToReveal": "Click to reveal"
+    },
     "columns": {
       "character": "Character",
       "gender": "Gender",

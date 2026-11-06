@@ -31,6 +31,7 @@
     fr: "fr-FR",
     de: "de-DE",
   };
+  const revealedHints = new Set();
 
   const numberLocale = numberLocales[window.AnimedleI18n?.getLanguage()] || "it-IT";
   // Non modifichiamo mai i valori nel JSON: traduciamo solo quanto si vede.
@@ -67,6 +68,7 @@
     }
     if (suggestions.classList.contains("show")) renderSuggestions();
     updateAmbientAccessibility();
+    updateHints();
   }
   function updateAmbientAccessibility() {
     const button = el("ambientToggle");
@@ -80,6 +82,7 @@
   let deck = [],
     secret = null,
     guessed = new Set(),
+    playerGuessCount = 0,
     won = false,
     finished = false,
     currentOptions = [],
@@ -237,6 +240,60 @@
     const gender = g.gender === "Male" ? gm("male", "Maschio") : g.gender === "Female" ? gm("female", "Femmina") : g.gender;
     return `<tr><td>${photo}</td><td>${tile(escapeHTML(gender), compareScalar(g.gender, s.gender))}</td><td>${tile(escapeHTML(translatedValue("affiliation", g.affiliation)), compareScalar(g.affiliation, s.affiliation))}</td><td>${tile(escapeHTML(dev), compareScalar(g.devil_fruit_type, s.devil_fruit_type))}</td><td>${tile(hakiLabel(g), hakiStatus(g, s))}</td><td>${numericTile(g.bounty_beli, s.bounty_beli, compactBounty(g.bounty_beli))}</td><td>${compareNumber(g.height_cm || NaN, s.height_cm || NaN, height)}</td><td>${tile(escapeHTML(translatedValue("origin", g.origin)), compareScalar(g.origin, s.origin))}</td><td>${arcTile(g, s)}</td></tr>`;
   }
+
+  function updateHints() {
+    const panel = el("hintPanel");
+    if (!panel || !secret) return;
+
+    // Nascosto prima del primo tentativo e a partita finita.
+    panel.hidden = playerGuessCount === 0 || finished;
+    if (panel.hidden) return;
+
+    const hints = [
+      {
+        id: "hintArc",
+        type: "arc",
+        unlockAt: 5,
+        value: secret.first_arc ? translatedValue("arc", secret.first_arc) : gm("unknown", "Sconosciuto"),
+      },
+      {
+        id: "hintAffiliation",
+        type: "affiliation",
+        unlockAt: 8,
+        value: secret.affiliation ? translatedValue("affiliation", secret.affiliation) : gm("unknown", "Sconosciuto"),
+      },
+    ];
+
+    for (const hint of hints) {
+      const element = el(hint.id);
+      const card = element.closest(".hint-card");
+
+      const remaining = Math.max(0, hint.unlockAt - playerGuessCount);
+
+      const unlocked = remaining === 0;
+      const revealed = revealedHints.has(hint.type);
+
+      if (!unlocked) {
+        // Indizio ancora bloccato.
+        const key = remaining === 1 ? "onepiece.hints.lockedOne" : "onepiece.hints.lockedMany";
+
+        element.textContent = fill(translate(key, remaining === 1 ? "Si sblocca tra {count} tentativo" : "Si sblocca tra {count} tentativi"), { count: remaining });
+      } else if (!revealed) {
+        // Sbloccato, ma il giocatore non l'ha richiesto.
+        element.textContent = translate("onepiece.hints.clickToReveal", "Clicca per rivelare");
+      } else {
+        // L'utente ha cliccato: mostra il vero indizio.
+        element.textContent = hint.value;
+      }
+
+      card.disabled = !unlocked || revealed;
+
+      card.classList.toggle("available", unlocked && !revealed);
+
+      card.classList.toggle("unlocked", revealed);
+    }
+  }
+
   function makeGuess(c) {
     if (finished) return;
     if (guessed.has(c.id)) {
@@ -245,8 +302,12 @@
     }
     const first = guessed.size === 0;
     guessed.add(c.id);
-    if (first) rows.innerHTML = "";
+    playerGuessCount++;
+
     rows.insertAdjacentHTML("afterbegin", makeRow(c));
+    rows.firstElementChild.classList.add("riga-animata");
+
+    updateHints();
     rows.firstElementChild.classList.add("riga-animata");
     input.value = "";
     closeSuggestions();
@@ -273,6 +334,7 @@
   }
   function endGame(success) {
     finished = true;
+    updateHints();
     won = success;
     input.disabled = true;
     el("guessBtn").disabled = true;
@@ -288,9 +350,12 @@
   function begin() {
     secret = newSecret();
     guessed = new Set();
+    playerGuessCount = 0;
+    revealedHints.clear();
     won = false;
     finished = false;
     rows.innerHTML = '<tr><td colspan="9" class="empty"></td></tr>';
+    updateHints();
     input.disabled = false;
     el("guessBtn").disabled = false;
     el("reveal").disabled = false;
@@ -324,6 +389,29 @@
     const hit = e.target.closest(".result");
     if (hit) pickCharacter(currentOptions[Number(hit.dataset.index)]);
   });
+
+  el("hintPanel").addEventListener("click", (event) => {
+    const card = event.target.closest(".hint-card");
+
+    if (!card || finished) return;
+
+    const hint = card.dataset.hint;
+
+    const unlockAt = {
+      arc: 5,
+      affiliation: 8,
+    }[hint];
+
+    if (!unlockAt || playerGuessCount < unlockAt || revealedHints.has(hint)) {
+      return;
+    }
+
+    // Rivela solamente l'indizio selezionato.
+    revealedHints.add(hint);
+
+    updateHints();
+  });
+
   function submitGuess() {
     if (finished) return;
     const q = norm(input.value);

@@ -3788,5 +3788,51 @@
     "image_url": "https://static.wikia.nocookie.net/onepiece/images/f/fb/Rocks_D._Xebec_Manga_Infobox.png/revision/latest?cb=20260228213945",
     "wanted_image_urls": [],
     "laugh_audio_urls": []
+  },
+  {
+    "id": 533,
+    "name": "Queen",
+    "aliases": [],
+    "gender": "Male",
+    "affiliation": "Beasts Pirates",
+    "devil_fruit_type": "Zoan",
+    "haki": { "observation": true, "armament": true, "conqueror": false },
+    "bounty_beli": 1320000000,
+    "height_cm": 612,
+    "origin": "Grand Line",
+    "first_arc": "Wano Country",
+    "first_arc_order": 31,
+    "first_appearance": { "chapter": 920, "episode": 918 },
+    "devil_fruit": {
+      "name": "Ryu Ryu no Mi, Model: Brachiosaurus",
+      "translated_name": "Dragon-Dragon Fruit, Model: Brachiosaurus",
+      "description": "Allows him to transform into a full brachiosaurus and a human-brachiosaurus hybrid at will. "
+    },
+    "image_url": "https://static.wikia.nocookie.net/onepiece/images/5/52/Queen_Anime_Infobox.png/revision/latest?cb=20200920174728",
+    "wanted_image_urls": [],
+    "laugh_audio_urls": []
+  },
+  {
+    "id": 534,
+    "name": "King",
+    "aliases": [],
+    "gender": "Male",
+    "affiliation": "Beasts Pirates",
+    "devil_fruit_type": "Zoan",
+    "haki": { "observation": true, "armament": true, "conqueror": false },
+    "bounty_beli": 1390000000,
+    "height_cm": 613,
+    "origin": "Grand Line",
+    "first_arc": "Wano Country",
+    "first_arc_order": 31,
+    "first_appearance": { "chapter": 925, "episode": 918 },
+    "devil_fruit": {
+      "name": "Ryu Ryu no Mi, Model: Pteranodon",
+      "translated_name": "Dragon-Dragon Fruit, Model: Pteranodon",
+      "description": "Allows him to transform into a full pteranodon and a human-pterosaur hybrid at will. "
+    },
+    "image_url": "https://static.wikia.nocookie.net/onepiece/images/8/8f/King_Anime_Infobox.png/revision/latest?cb=20230423142631",
+    "wanted_image_urls": [],
+    "laugh_audio_urls": []
   }
 ]
