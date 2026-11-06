@@ -95,6 +95,31 @@
             <i class="fa-solid fa-rotate-right" style="color: rgb(255, 255, 255)"></i>
           </button>
         </div>
+        <section id="hintPanel" class="hint-panel" hidden>
+          <h3 data-i18n="naruto.hints.title">Indizi</h3>
+
+          <div class="hint-grid">
+            <!-- Primo indizio -->
+            <button type="button" class="hint-card" data-hint="arc" disabled>
+              <span class="hint-label">
+                <i class="fa-solid fa-scroll"></i>
+                <span data-i18n="naruto.columns.debutArc"> Arco di debutto </span>
+              </span>
+
+              <strong id="hintArc" class="hint-value"></strong>
+            </button>
+
+            <!-- Secondo indizio -->
+            <button type="button" class="hint-card" data-hint="affiliation" disabled>
+              <span class="hint-label">
+                <i class="fa-solid fa-flag"></i>
+                <span data-i18n="naruto.columns.affiliations">Affiliazioni</span>
+              </span>
+
+              <strong id="hintAffiliation" class="hint-value"></strong>
+            </button>
+          </div>
+        </section>
         <div class="table-scroll">
           <table aria-label="Tentativi e indizi" data-i18n-aria-label="naruto.page.tableAria">
             <thead>

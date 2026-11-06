@@ -67,7 +67,7 @@
       "audioOff": "Hintergrundmusik einschalten"
     },
     "hints": {
-      "title": "Zusätzliche Hinweise",
+      "title": "Hinweise",
       "debutArc": "Debüt-Arc",
       "lockedOne": "Noch {count} Versuch bis zur Freischaltung",
       "lockedMany": "Noch {count} Versuche bis zur Freischaltung",
@@ -146,6 +146,12 @@
       "lower": "Niedriger",
       "audioOn": "Hintergrundmusik ausschalten",
       "audioOff": "Hintergrundmusik einschalten"
+    },
+    "hints": {
+      "title": "Hinweise",
+      "lockedOne": "Noch {count} Versuch bis zur Freischaltung",
+      "lockedMany": "Noch {count} Versuche bis zur Freischaltung",
+      "clickToReveal": "Klicken zum Aufdecken"
     },
     "columns": {
       "character": "Figur",

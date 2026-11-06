@@ -67,7 +67,7 @@
       "audioOff": "Turn ambience on"
     },
     "hints": {
-      "title": "Additional clues",
+      "title": "Hints",
       "debutArc": "Debut arc",
       "lockedOne": "Unlocks in {count} guess",
       "lockedMany": "Unlocks in {count} guesses",
@@ -146,6 +146,12 @@
       "lower": "Lower",
       "audioOn": "Turn ambience off",
       "audioOff": "Turn ambience on"
+    },
+    "hints": {
+      "title": "Hints",
+      "lockedOne": "Unlocks in {count} guess",
+      "lockedMany": "Unlocks in {count} guesses",
+      "clickToReveal": "Click to reveal"
     },
     "columns": {
       "character": "Character",

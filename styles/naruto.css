@@ -814,6 +814,122 @@ thead th {
   color: #ffe0a7;
   margin-left: auto;
 }
+
+.hint-panel[hidden] {
+  display: none !important;
+}
+
+.hint-panel {
+  max-width: 780px;
+  margin: 20px auto;
+  padding: 18px;
+  border: 2px solid var(--border, #b86d43);
+  border-radius: 14px;
+  background: linear-gradient(135deg, #f8e6c2, #eac69b);
+  box-shadow: 0 4px 0 #a87c4a38;
+}
+
+.hint-panel h3 {
+  margin: 0 0 14px;
+  text-align: center;
+  font-family: Georgia, serif;
+  font-size: 19px;
+  color: #174357;
+}
+
+.hint-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.hint-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 105px;
+  padding: 14px;
+  border: 1px dashed #ba845c;
+  border-radius: 10px;
+  background: #e9ddc7;
+  text-align: center;
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.hint-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-size: 14px;
+  font-weight: 750;
+  color: #614b30;
+}
+
+.hint-value {
+  font-size: 15px;
+  color: #766957;
+  overflow-wrap: anywhere;
+}
+
+.hint-card.unlocked {
+  background: #d9f0d9;
+  border: 1px solid #429765;
+}
+
+.hint-card.unlocked .hint-value {
+  color: #1b653c;
+}
+
+/* Indizi cliccabili */
+
+.hint-card {
+  width: 100%;
+  font: inherit;
+  cursor: default;
+  opacity: 1;
+}
+
+.hint-card:disabled {
+  opacity: 1;
+  cursor: default;
+}
+
+/* Disponibile, ma non ancora rivelato */
+.hint-card.available {
+  background: #fff0c2;
+  border: 1px solid #cb9035;
+  cursor: pointer;
+}
+
+.hint-card.available .hint-value {
+  color: #89551d;
+}
+
+.hint-card.available:hover {
+  background: #ffe29a;
+  transform: translateY(-2px);
+}
+
+.hint-card.available:focus-visible {
+  outline: 3px solid #174357;
+  outline-offset: 3px;
+}
+
+/* Rivelato: utilizza lo stile .unlocked già presente */
+.hint-card.unlocked {
+  cursor: default;
+}
+
+@media (max-width: 560px) {
+  .hint-grid {
+    grid-template-columns: 1fr;
+  }
+}
 @media (max-width: 600px) {
   .language-trigger {
     width: 38px;

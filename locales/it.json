@@ -68,7 +68,7 @@
       "audioOff": "Attiva atmosfera"
     },
     "hints": {
-      "title": "Indizi aggiuntivi",
+      "title": "Indizi",
       "debutArc": "Arco di debutto",
       "lockedOne": "Si sblocca tra {count} tentativo",
       "lockedMany": "Si sblocca tra {count} tentativi",
@@ -243,6 +243,12 @@
       "lower": "Più basso",
       "audioOn": "Disattiva atmosfera",
       "audioOff": "Attiva atmosfera"
+    },
+    "hints": {
+      "title": "Indizi",
+      "lockedOne": "Si sblocca tra {count} tentativo",
+      "lockedMany": "Si sblocca tra {count} tentativi",
+      "clickToReveal": "Clicca per rivelare"
     },
     "columns": {
       "character": "Personaggio",

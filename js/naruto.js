@@ -11,6 +11,8 @@
     ended = false,
     current = [],
     active = 0;
+  let playerGuessCount = 0;
+  const revealedHints = new Set();
   const esc = (value) =>
     String(value == null ? "" : value).replace(
       /[&<>"']/g,
@@ -134,6 +136,7 @@
   }
   function finish(win) {
     ended = true;
+    updateHints();
     input.disabled = true;
     byId("submitGuess").disabled = true;
     byId("showAnswer").disabled = true;
@@ -145,6 +148,61 @@
     byId("resultText").textContent = win ? `Hai trovato ${secret.name} in ${guesses.size} tentativi!` : `Il personaggio segreto era ${secret.name}. Puoi ricominciare subito.`;
     status("");
   }
+
+  function updateHints() {
+    const panel = byId("hintPanel");
+    if (!panel || !secret) return;
+
+    // Prima del primo tentativo o a partita conclusa.
+    panel.hidden = playerGuessCount === 0 || ended;
+    if (panel.hidden) return;
+
+    const arcValue = secret.first_arc ? translatedValue("arc", secret.first_arc) : t("naruto.game.none", "Nessuno");
+
+    const affiliationValue = Array.isArray(secret.affiliations) && secret.affiliations.length ? secret.affiliations.map((a) => translatedValue("affiliations", a)).join(", ") : t("naruto.game.unknownAffiliation", "Affiliazione non nota");
+
+    const hints = [
+      {
+        id: "hintArc",
+        type: "arc",
+        unlockAt: 5,
+        value: arcValue,
+      },
+      {
+        id: "hintAffiliation",
+        type: "affiliation",
+        unlockAt: 8,
+        value: affiliationValue,
+      },
+    ];
+
+    for (const hint of hints) {
+      const element = byId(hint.id);
+      const card = element.closest(".hint-card");
+
+      const remaining = Math.max(0, hint.unlockAt - playerGuessCount);
+
+      const unlocked = remaining === 0;
+      const revealed = revealedHints.has(hint.type);
+
+      if (!unlocked) {
+        const key = remaining === 1 ? "naruto.hints.lockedOne" : "naruto.hints.lockedMany";
+
+        const fallback = remaining === 1 ? "Si sblocca tra {count} tentativo" : "Si sblocca tra {count} tentativi";
+
+        element.textContent = format(t(key, fallback), { count: remaining });
+      } else if (!revealed) {
+        element.textContent = t("naruto.hints.clickToReveal", "Clicca per rivelare");
+      } else {
+        element.textContent = hint.value;
+      }
+
+      card.disabled = !unlocked || revealed;
+      card.classList.toggle("available", unlocked && !revealed);
+      card.classList.toggle("unlocked", revealed);
+    }
+  }
+
   function makeGuess(c) {
     if (!c || ended) return;
     if (guesses.has(c.id)) {
@@ -153,9 +211,11 @@
     }
     const first = guesses.size === 0;
     guesses.add(c.id);
+    playerGuessCount++;
     if (first) rows.innerHTML = "";
     rows.insertAdjacentHTML("afterbegin", renderGuess(c));
     rows.firstElementChild.classList.add("riga-animata");
+    updateHints();
     input.value = "";
     closeList();
     if (c.id === secret.id) {
@@ -186,6 +246,9 @@
     }
     secret = nextSecret();
     guesses = new Set();
+    playerGuessCount = 0;
+    revealedHints.clear();
+    updateHints();
     ended = false;
     rows.innerHTML = '<tr><td colspan="8" class="empty"></td></tr>';
     input.value = "";
@@ -239,6 +302,27 @@
       finish(false);
     }
   });
+
+  byId("hintPanel").addEventListener("click", (event) => {
+    const card = event.target.closest(".hint-card");
+
+    if (!card || ended) return;
+
+    const hint = card.dataset.hint;
+
+    const unlockAt = {
+      arc: 5,
+      affiliation: 8,
+    }[hint];
+
+    if (!unlockAt || playerGuessCount < unlockAt || revealedHints.has(hint)) {
+      return;
+    }
+
+    revealedHints.add(hint);
+    updateHints();
+  });
+
   // On GitHub Pages characters.json is the editable source of truth.
   // file:// local opens use the embedded fallback to work without any server.
   fetch("./characters.json", { cache: "no-store" })
@@ -442,6 +526,7 @@
       if (element) textNodes(element, gameMessage);
     });
     updateAudioLabel();
+    updateHints();
   }
 
   function start() {
