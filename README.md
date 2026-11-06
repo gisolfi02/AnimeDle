@@ -21,7 +21,7 @@ Choose your universe, guess the mystery character, and use the clues to uncover 
   <img alt="GitHub Pages" src="https://img.shields.io/badge/GitHub%20Pages-Deploy-222222?style=flat-square&logo=githubpages&logoColor=white" />
 </p>
 
-**[🌐 Open Animedle](https://gisolfi02.github.io/Animedle/)**
+**[🌐 Open Animedle](https://gisolfi02.github.io/AnimeDle/)**
 
 </div>
 
@@ -34,34 +34,34 @@ Each game features its own visual identity, character roster, and set of clue ca
 <table>
   <tr>
     <td align="center" width="50%">
-      <a href="https://gisolfi02.github.io/Animedle/onepiece/"><img src="./images/onepiece.jpg" alt="One Piece banner" width="100%" /></a><br />
+      <a href="https://gisolfi02.github.io/AnimeDle/onepiece/"><img src="./images/onepiece.jpg" alt="One Piece banner" width="100%" /></a><br />
       <strong>🏴‍☠️ OnePiecedle</strong><br />
       <sub>Grand Line · Treasure Map</sub><br /><br />
       Crews, Devil Fruits, Haki, bounties, and much more.<br /><br />
-      <a href="https://gisolfi02.github.io/Animedle/onepiece/">Play OnePiecedle</a>
+      <a href="https://gisolfi02.github.io/AnimeDle/onepiece/">Play OnePiecedle</a>
     </td>
     <td align="center" width="50%">
-      <a href="https://gisolfi02.github.io/Animedle/naruto/"><img src="./images/naruto.jpg" alt="Naruto banner" width="100%" /></a><br />
+      <a href="https://gisolfi02.github.io/AnimeDle/naruto/"><img src="./images/naruto.jpg" alt="Naruto banner" width="100%" /></a><br />
       <strong>🍃 Narutodle</strong><br />
       <sub>Shinobi Scroll</sub><br /><br />
       Villages, ninja techniques, Kekkei Genkai, and chakra natures.<br /><br />
-      <a href="https://gisolfi02.github.io/Animedle/naruto/">Play Narutodle</a>
+      <a href="https://gisolfi02.github.io/AnimeDle/naruto/">Play Narutodle</a>
     </td>
   </tr>
   <tr>
     <td align="center" width="50%">
-      <a href="https://gisolfi02.github.io/Animedle/dragonball/"><img src="./images/dragonball.jpg" alt="Dragon Ball banner" width="100%" /></a><br />
+      <a href="https://gisolfi02.github.io/AnimeDle/dragonball/"><img src="./images/dragonball.jpg" alt="Dragon Ball banner" width="100%" /></a><br />
       <strong>🐉 Dragonballdle</strong><br />
       <sub>Dragon Radar · Capsule Edition</sub><br /><br />
       Hair, races, origins, sagas, and series.<br /><br />
-      <a href="https://gisolfi02.github.io/Animedle/dragonball/">Play Dragonballdle</a>
+      <a href="https://gisolfi02.github.io/AnimeDle/dragonball/">Play Dragonballdle</a>
     </td>
     <td align="center" width="50%">
-      <a href="https://gisolfi02.github.io/Animedle/bleach/"><img src="./images/bleach.jpg" alt="Bleach banner" width="100%" /></a><br />
+      <a href="https://gisolfi02.github.io/AnimeDle/bleach/"><img src="./images/bleach.jpg" alt="Bleach banner" width="100%" /></a><br />
       <strong>⚔️ Bleachdle</strong><br />
       <sub>Bankai · Monochrome Edition</sub><br /><br />
       Races, occupations, affiliations, and story arcs.<br /><br />
-      <a href="https://gisolfi02.github.io/Animedle/bleach/">Play Bleachdle</a>
+      <a href="https://gisolfi02.github.io/AnimeDle/bleach/">Play Bleachdle</a>
     </td>
   </tr>
 </table>
@@ -195,6 +195,6 @@ _One Piece_, _Naruto_, _Dragon Ball_, and _Bleach_, along with their respective 
 
 **Made with ❤️ for anime fans.**
 
-**[🎮 PLAY ANIMEDLE](https://gisolfi02.github.io/Animedle/)**
+**[🎮 PLAY ANIMEDLE](https://gisolfi02.github.io/AnimeDle/)**
 
 </div>
