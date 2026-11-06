@@ -291,6 +291,12 @@
       "audioOn": "Hintergrundmusik ausschalten",
       "audioOff": "Hintergrundmusik einschalten"
     },
+    "hints": {
+      "title": "Hinweise",
+      "lockedOne": "Noch {count} Versuch bis zur Freischaltung",
+      "lockedMany": "Noch {count} Versuche bis zur Freischaltung",
+      "clickToReveal": "Klicken zum Aufdecken"
+    },
     "columns": {
       "character": "Figur",
       "gender": "Geschlecht",

@@ -291,6 +291,12 @@
       "audioOn": "Desactivar sonido ambiental",
       "audioOff": "Activar sonido ambiental"
     },
+    "hints": {
+      "title": "Pistas",
+      "lockedOne": "Se desbloquea en {count} intento",
+      "lockedMany": "Se desbloquea en {count} intentos",
+      "clickToReveal": "Haz clic para revelar"
+    },
     "columns": {
       "character": "Personaje",
       "gender": "Género",

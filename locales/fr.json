@@ -291,6 +291,12 @@
       "audioOn": "Désactiver l’ambiance sonore",
       "audioOff": "Activer l’ambiance sonore"
     },
+    "hints": {
+      "title": "Indices",
+      "lockedOne": "Se débloque dans {count} essai",
+      "lockedMany": "Se débloque dans {count} essais",
+      "clickToReveal": "Cliquez pour révéler"
+    },
     "columns": {
       "character": "Personnage",
       "gender": "Genre",

@@ -79,7 +79,31 @@
           <p id="resultText"></p>
           <button class="btn primary" id="again" type="button"><i class="fas fa-rotate-right"></i> <span data-i18n="dragonball.page.playAgain">Gioca ancora</span></button>
         </div>
+        <section id="hintPanel" class="hint-panel" hidden>
+          <h3 data-i18n="dragonball.hints.title">Indizi</h3>
 
+          <div class="hint-grid">
+            <!-- Primo indizio -->
+            <button type="button" class="hint-card" data-hint="saga" disabled>
+              <span class="hint-label">
+                <i class="fa-solid fa-scroll"></i>
+                <span data-i18n="dragonball.columns.saga"> Saga </span>
+              </span>
+
+              <strong id="hintSaga" class="hint-value"></strong>
+            </button>
+
+            <!-- Secondo indizio -->
+            <button type="button" class="hint-card" data-hint="race" disabled>
+              <span class="hint-label">
+                <i class="fa-solid fa-flag"></i>
+                <span data-i18n="dragonball.columns.race">Razza</span>
+              </span>
+
+              <strong id="hintRace" class="hint-value"></strong>
+            </button>
+          </div>
+        </section>
         <div class="table-outer">
           <table aria-label="Tentativi e indizi" data-i18n-aria-label="dragonball.page.tableAria">
             <thead>

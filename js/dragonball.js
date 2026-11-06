@@ -31,6 +31,8 @@
     options = [],
     active = 0,
     portraits = new Map();
+  let playerGuessCount = 0;
+  const revealedHints = new Set();
   const isUrl = (x) => typeof x === "string" && /^https:\/\//.test(x);
   function imgFor(c) {
     return portraits.get(c.name) || c.image_url || "";
@@ -89,6 +91,7 @@
     renderFinish();
     if (menu.classList.contains("open") && inp.value.trim()) search();
     updateAudioLabel();
+    updateHints();
   }
   document.addEventListener("animedle:languagechange", onLanguageChange);
   ["play", "pause"].forEach((event) => byId("ambientAudio")?.addEventListener(event, updateAudioLabel));
@@ -168,6 +171,7 @@
   }
   function finish(win) {
     ended = true;
+    updateHints();
     inp.disabled = true;
     byId("submitGuess").disabled = true;
     byId("showAnswer").disabled = true;
@@ -177,17 +181,84 @@
     finishedWin = win;
     renderFinish();
   }
+
+  function updateHints() {
+    const panel = byId("hintPanel");
+    if (!panel) return;
+
+    // Nasconde gli indizi prima del primo tentativo
+    // oppure quando la partita è terminata.
+    panel.hidden = !secret || ended || playerGuessCount === 0;
+    if (panel.hidden) return;
+
+    // Riutilizza le traduzioni degli indizi di One Piece.
+    function hintText(key, fallback) {
+      const path = `dragonball.hints.${key}`;
+      const translated = window.AnimedleI18n?.t(path);
+
+      return typeof translated === "string" && translated !== path ? translated : fallback;
+    }
+
+    const hints = [
+      {
+        id: "hintSaga",
+        type: "saga",
+        unlockAt: 5,
+        value: displayValue("saga", secret.saga),
+      },
+      {
+        id: "hintRace",
+        type: "race",
+        unlockAt: 8,
+        value: displayValue("race", secret.race),
+      },
+    ];
+
+    for (const hint of hints) {
+      const element = byId(hint.id);
+      const card = element.closest(".hint-card");
+
+      const remaining = Math.max(0, hint.unlockAt - playerGuessCount);
+
+      const unlocked = remaining === 0;
+      const revealed = revealedHints.has(hint.type);
+
+      if (!unlocked) {
+        // Indizio ancora bloccato.
+        const key = remaining === 1 ? "lockedOne" : "lockedMany";
+
+        const fallback = remaining === 1 ? "Si sblocca tra {count} tentativo" : "Si sblocca tra {count} tentativi";
+
+        element.textContent = hintText(key, fallback).replace("{count}", remaining);
+      } else if (!revealed) {
+        // Disponibile, ma non ancora rivelato.
+        element.textContent = hintText("clickToReveal", "Clicca per rivelare");
+      } else {
+        // Rivelato su richiesta del giocatore.
+        element.textContent = hint.value;
+      }
+
+      card.disabled = !unlocked || revealed;
+
+      card.classList.toggle("available", unlocked && !revealed);
+
+      card.classList.toggle("unlocked", revealed);
+    }
+  }
+
   function guess(c) {
     if (!c || ended) return;
     if (guesses.has(c.id)) {
       return;
     }
     const first = guesses.size === 0;
+    playerGuessCount++;
     guesses.add(c.id);
     guessHistory.push(c);
     if (first) tbody.innerHTML = "";
     tbody.insertAdjacentHTML("afterbegin", render(c));
     tbody.firstElementChild.classList.add("riga-animata");
+    updateHints();
     inp.value = "";
     close();
     if (c.id === secret.id) {
@@ -214,9 +285,12 @@
     }
     secret = getSecret();
     guesses.clear();
+    playerGuessCount = 0;
     guessHistory = [];
     finishedWin = null;
     ended = false;
+    revealedHints.clear();
+    updateHints();
     tbody.innerHTML = '<tr><td colspan="7" class="empty"></td></tr>';
     inp.value = "";
     inp.disabled = false;
@@ -268,6 +342,25 @@
 
       finish(false);
     }
+  });
+  byId("hintPanel").addEventListener("click", (event) => {
+    const card = event.target.closest(".hint-card");
+
+    if (!card || ended) return;
+
+    const hint = card.dataset.hint;
+
+    const unlockAt = {
+      saga: 5,
+      race: 8,
+    }[hint];
+
+    if (!unlockAt || playerGuessCount < unlockAt || revealedHints.has(hint)) {
+      return;
+    }
+
+    revealedHints.add(hint);
+    updateHints();
   });
 
   fetch("./characters.json", {

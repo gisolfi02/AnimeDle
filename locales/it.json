@@ -388,6 +388,12 @@
       "audioOn": "Disattiva atmosfera",
       "audioOff": "Attiva atmosfera"
     },
+    "hints": {
+      "title": "Indizi",
+      "lockedOne": "Si sblocca tra {count} tentativo",
+      "lockedMany": "Si sblocca tra {count} tentativi",
+      "clickToReveal": "Clicca per rivelare"
+    },
     "columns": {
       "character": "Personaggio",
       "gender": "Sesso",
